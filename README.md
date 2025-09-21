@@ -1,2 +1,3 @@
 # freelens-sveltos-extension
-About Freelens extension for Sveltos
+
+[ WARNING: This repository has just been initialized and is a work in progress. ]
