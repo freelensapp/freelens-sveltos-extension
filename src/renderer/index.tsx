@@ -4,6 +4,9 @@
  */
 
 import { Renderer } from "@freelensapp/extensions";
+// transpiled .tsx code must have `React` symbol in the scope
+// @ts-ignore
+import React from "react";
 import { SveltosPreferencesStore } from "../common/store";
 import { createAvailableVersionPage } from "./components/available-version";
 import { SveltosDetails as SveltosDetailsV1alpha1 } from "./details/sveltos-details-v1alpha1";
@@ -19,6 +22,7 @@ import {
   SveltosActiveToggleMenuItem as SveltosActiveToggleMenuItem_v1alpha2,
   type SveltosActiveToggleMenuItemProps as SveltosActiveToggleMenuItemProps_v1alpha2,
 } from "./menus/sveltos-active-toggle-menu-item-v1alpha2";
+import { Overview } from "./modules/overview";
 import { SveltosPage as SveltosPageV1alpha1 } from "./pages/sveltos-page-v1alpha1";
 import { SveltosPage as SveltosPageV1alpha2 } from "./pages/sveltos-page-v1alpha2";
 import { SveltosPreferenceHint, SveltosPreferenceInput } from "./preferences/sveltos-preference";
@@ -83,16 +87,29 @@ export default class SveltosRenderer extends Renderer.LensExtension {
         ]),
       },
     },
+    {
+      id: "sveltos-overview",
+      components: {
+        Page: () => <Overview extension={this} />,
+      },
+    },
   ];
 
   clusterPageMenus = [
     {
       id: "sveltos",
       title: SveltosV1alpha1.crd.title,
-      target: { pageId: "sveltos" },
+      target: { pageId: "sveltos-overview" },
       components: {
         Icon: SveltosIcon,
       },
+    },
+    {
+      id: "sveltos-overview",
+      parentId: "sveltos",
+      title: "Overview",
+      target: { pageId: "sveltos-overview" },
+      components: {},
     },
   ];
 
