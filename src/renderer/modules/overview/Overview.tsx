@@ -10,6 +10,7 @@ import React from "react";
 import { ClusterSummary } from "./ClusterSummary";
 import { EventsSummary } from "./EventsSummary";
 import { HelmSummary } from "./HelmSummary";
+import styles from "./Overview.module.scss";
 import styleInline from "./Overview.module.scss?inline";
 import { StatsCard } from "./StatsCard";
 import { useOverviewData } from "./useOverviewData";
@@ -25,7 +26,7 @@ export const Overview: React.FC<OverviewProps> = ({ extension: _extension }) => 
 
   if (data.error) {
     return (
-      <div className="overview-error">
+      <div className={styles.overviewError}>
         <Component.Icon material="error" />
         <p>Error loading overview data: {data.error.message}</p>
       </div>
@@ -33,19 +34,19 @@ export const Overview: React.FC<OverviewProps> = ({ extension: _extension }) => 
   }
 
   return (
-    <div className="overview-page">
+    <div className={styles.overviewPage}>
       <style>{styleInline}</style>
 
-      <div className="overview-header">
+      <div className={styles.overviewHeader}>
         <h1>
           <Component.Icon material="dashboard" />
           Sveltos Overview
         </h1>
-        {data.isLoading && <Component.Icon material="hourglass_empty" className="spinning" />}
+        {data.isLoading && <Component.Icon material="hourglass_empty" className={styles.spinning} />}
       </div>
 
-      <div className="overview-grid">
-        <div className="stats-row">
+      <div className={styles.overviewGrid}>
+        <div className={styles.statsRow}>
           <StatsCard
             title="ClusterAPI Clusters"
             value={data.clusters.capiTotal}

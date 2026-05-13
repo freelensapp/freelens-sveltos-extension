@@ -7,6 +7,7 @@
 
 import { Renderer } from "@freelensapp/extensions";
 import React from "react";
+import styles from "./Overview.module.scss";
 
 import type { EventStats } from "./types";
 
@@ -27,29 +28,29 @@ export const EventsSummary: React.FC<EventsSummaryProps> = ({ events }) => {
   };
 
   return (
-    <div className="overview-section">
+    <div className={styles.overviewSection}>
       <h2>
         <Component.Icon material="event" />
         Recent Events ({events.totalEvents})
       </h2>
 
       {events.recentEvents.length === 0 ? (
-        <div className="no-data">
+        <div className={styles.noData}>
           <Component.Icon material="info" />
           <p>No events to display</p>
         </div>
       ) : (
-        <div className="events-list">
+        <div className={styles.eventsList}>
           {events.recentEvents.map((event, idx) => (
-            <div key={idx} className="event-item">
-              <div className="event-header">
-                <span className="event-name">{event.name}</span>
-                <span className="event-namespace">{event.namespace}</span>
-                <span className="event-type">{event.type}</span>
+            <div key={idx} className={styles.eventItem}>
+              <div className={styles.eventItemHeader}>
+                <span className={styles.eventItemName}>{event.name}</span>
+                <span className={styles.eventItemNamespace}>{event.namespace}</span>
+                <span className={styles.eventItemType}>{event.type}</span>
               </div>
-              <div className="event-body">
+              <div className={styles.eventItemBody}>
                 <p>{event.message}</p>
-                <span className="event-time">{formatTime(event.timestamp)}</span>
+                <span className={styles.eventItemTime}>{formatTime(event.timestamp)}</span>
               </div>
             </div>
           ))}

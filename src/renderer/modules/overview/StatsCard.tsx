@@ -7,6 +7,7 @@
 
 import { Renderer } from "@freelensapp/extensions";
 import React from "react";
+import styles from "./Overview.module.scss";
 
 const { Component } = Renderer;
 
@@ -27,20 +28,28 @@ export const StatsCard: React.FC<StatCardProps> = ({
   icon = "info",
   color = "blue",
 }) => {
+  const colorClassByName: Record<string, string> = {
+    blue: styles.statsCardBlue,
+    purple: styles.statsCardPurple,
+    green: styles.statsCardGreen,
+    orange: styles.statsCardOrange,
+  };
+  const colorClass = colorClassByName[color] ?? styles.statsCardBlue;
+
   return (
-    <div className={`stats-card stats-card-${color}`}>
-      <div className="stats-card-header">
+    <div className={`${styles.statsCard} ${colorClass}`}>
+      <div className={styles.statsCardHeader}>
         <Component.Icon material={icon} />
         <h3>{title}</h3>
       </div>
-      <div className="stats-card-content">
-        <div className="stats-card-main">
-          <span className="stats-value">{value}</span>
+      <div className={styles.statsCardContent}>
+        <div className={styles.statsCardMain}>
+          <span className={styles.statsValue}>{value}</span>
         </div>
         {subValue !== undefined && subLabel && (
-          <div className="stats-card-sub">
-            <span className="stats-sub-label">{subLabel}</span>
-            <span className="stats-sub-value">{subValue}</span>
+          <div className={styles.statsCardSub}>
+            <span className={styles.statsSubLabel}>{subLabel}</span>
+            <span className={styles.statsSubValue}>{subValue}</span>
           </div>
         )}
       </div>

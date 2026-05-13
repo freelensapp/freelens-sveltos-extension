@@ -7,6 +7,7 @@
 
 import { Renderer } from "@freelensapp/extensions";
 import React from "react";
+import styles from "./Overview.module.scss";
 
 const { Component } = Renderer;
 
@@ -22,51 +23,51 @@ export const ClusterSummary: React.FC<ClusterSummaryProps> = ({ capiTotal, capiR
   const sveltosHealthPercent = sveltosTotal > 0 ? Math.round((sveltosReady / sveltosTotal) * 100) : 0;
 
   return (
-    <div className="overview-section">
+    <div className={styles.overviewSection}>
       <h2>
         <Component.Icon material="cloud" />
         Cluster Overview
       </h2>
 
-      <div className="cluster-summary">
-        <div className="cluster-summary-item">
-          <div className="cluster-summary-title">
+      <div className={styles.clusterSummary}>
+        <div className={styles.clusterSummaryItem}>
+          <div className={styles.clusterSummaryTitle}>
             <span>ClusterAPI Clusters</span>
           </div>
-          <div className="cluster-summary-stats">
-            <div className="cluster-stat">
-              <span className="stat-label">Total</span>
-              <span className="stat-value">{capiTotal}</span>
+          <div className={styles.clusterSummaryStats}>
+            <div className={styles.clusterStat}>
+              <span className={styles.statLabel}>Total</span>
+              <span className={styles.statValue}>{capiTotal}</span>
             </div>
-            <div className="cluster-stat">
-              <span className="stat-label">Ready</span>
-              <span className="stat-value stat-ready">{capiReady}</span>
+            <div className={styles.clusterStat}>
+              <span className={styles.statLabel}>Ready</span>
+              <span className={`${styles.statValue} ${styles.statReady}`}>{capiReady}</span>
             </div>
-            <div className="cluster-stat">
-              <span className="stat-label">Health</span>
-              <span className={`stat-health ${capiHealthPercent >= 80 ? "healthy" : "warning"}`}>
+            <div className={styles.clusterStat}>
+              <span className={styles.statLabel}>Health</span>
+              <span className={`${styles.statHealth} ${capiHealthPercent >= 80 ? styles.healthy : styles.warning}`}>
                 {capiHealthPercent}%
               </span>
             </div>
           </div>
         </div>
 
-        <div className="cluster-summary-item">
-          <div className="cluster-summary-title">
+        <div className={styles.clusterSummaryItem}>
+          <div className={styles.clusterSummaryTitle}>
             <span>Sveltos Clusters</span>
           </div>
-          <div className="cluster-summary-stats">
-            <div className="cluster-stat">
-              <span className="stat-label">Total</span>
-              <span className="stat-value">{sveltosTotal}</span>
+          <div className={styles.clusterSummaryStats}>
+            <div className={styles.clusterStat}>
+              <span className={styles.statLabel}>Total</span>
+              <span className={styles.statValue}>{sveltosTotal}</span>
             </div>
-            <div className="cluster-stat">
-              <span className="stat-label">Ready</span>
-              <span className="stat-value stat-ready">{sveltosReady}</span>
+            <div className={styles.clusterStat}>
+              <span className={styles.statLabel}>Ready</span>
+              <span className={`${styles.statValue} ${styles.statReady}`}>{sveltosReady}</span>
             </div>
-            <div className="cluster-stat">
-              <span className="stat-label">Health</span>
-              <span className={`stat-health ${sveltosHealthPercent >= 80 ? "healthy" : "warning"}`}>
+            <div className={styles.clusterStat}>
+              <span className={styles.statLabel}>Health</span>
+              <span className={`${styles.statHealth} ${sveltosHealthPercent >= 80 ? styles.healthy : styles.warning}`}>
                 {sveltosHealthPercent}%
               </span>
             </div>
