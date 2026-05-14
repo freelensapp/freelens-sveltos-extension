@@ -21,6 +21,11 @@ const pageInlineStyles = `${styleInline}
 
 .TabLayout > main {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+  background: var(--layoutBackground);
+  overflow: hidden;
 }`;
 
 const {
@@ -60,10 +65,27 @@ const sveltosSortingCallbacks = {
   age: (object: SveltosCluster) => object.getCreationTimestamp(),
 };
 
-const sveltosTableHeader: { title: string; sortBy: keyof typeof sveltosSortingCallbacks; className?: string }[] = [
+const sveltosSortingCallbacksWithAgent = {
+  ...sveltosSortingCallbacks,
+  agent: (object: SveltosCluster) => {
+    const ready = object.status?.ready;
+
+    if (ready === true) return "2";
+    if (ready === false) return "1";
+
+    return "0";
+  },
+};
+
+const sveltosTableHeader: {
+  title: string;
+  sortBy: keyof typeof sveltosSortingCallbacksWithAgent;
+  className?: string;
+}[] = [
   { title: "Name", sortBy: "name", className: "name" },
   { title: "Namespace", sortBy: "namespace", className: "namespace" },
   { title: "Status", sortBy: "status", className: "status" },
+  { title: "Agent", sortBy: "agent", className: "agent" },
   { title: "Version", sortBy: "version", className: "version" },
   { title: "Age", sortBy: "age", className: "age" },
 ];
@@ -72,24 +94,25 @@ function renderSveltosRow(object: SveltosCluster): React.ReactNode[] {
   const paused = getSveltosPaused(object);
   const pullMode = getSveltosPullMode(object);
   const ready = object.status?.ready === true;
+  const readyValue = object.status?.ready;
+  const agentState = readyValue === true ? "present" : readyValue === false ? "missing" : "unknown";
 
   return [
     <WithTooltip key="name">{object.getName()}</WithTooltip>,
     <NamespaceSelectBadge key="ns" namespace={object.getNs() ?? ""} />,
-    <span key="status" className={`${styles["status-badge"]} ${ready ? styles["ready"] : styles["not-ready"]}`}>
+    <span key="status" className={styles.statusBadge}>
+      <span className={`${styles.statusDot} ${ready ? styles.ready : styles.notReady}`} />
       {ready ? "Ready" : "Not Ready"}
-      {paused && (
-        <span key="paused" className={styles["paused-badge"]} style={{ marginLeft: 4 }}>
-          Paused
-        </span>
-      )}
-      {pullMode && (
-        <span key="pull-mode" className={styles["pull-mode-badge"]} style={{ marginLeft: 4 }}>
-          Pull Mode
-        </span>
-      )}
+      {paused && <span className={styles.pausedBadge}>Paused</span>}
+      {pullMode && <span className={styles.pullModeBadge}>Pull Mode</span>}
     </span>,
-    <span key="version" className={styles["version-text"]}>
+    <span key="agent" className={styles.agentBadge}>
+      <span
+        className={`${styles.agentDot} ${agentState === "present" ? styles.ok : agentState === "missing" ? styles.error : styles.unknown}`}
+      />
+      {agentState === "present" ? "Present" : agentState === "missing" ? "Not Present" : "Unknown"}
+    </span>,
+    <span key="version" className={styles.versionText}>
       {getSveltosVersion(object)}
     </span>,
     <KubeObjectAge key="age" object={object} />,
@@ -135,13 +158,10 @@ function renderCapiRow(object: CapiCluster): React.ReactNode[] {
   return [
     <WithTooltip key="name">{object.getName()}</WithTooltip>,
     <NamespaceSelectBadge key="ns" namespace={object.getNs() ?? ""} />,
-    <span key="status" className={`${styles["status-badge"]} ${ready ? styles["ready"] : styles["not-ready"]}`}>
+    <span key="status" className={styles.statusBadge}>
+      <span className={`${styles.statusDot} ${ready ? styles.ready : styles.notReady}`} />
       {getCapiStatus(object)}
-      {paused && (
-        <span key="paused" className={styles["paused-badge"]} style={{ marginLeft: 4 }}>
-          Paused
-        </span>
-      )}
+      {paused && <span className={styles.pausedBadge}>Paused</span>}
     </span>,
     <WithTooltip key="phase">{getCapiPhase(object)}</WithTooltip>,
     <KubeObjectAge key="age" object={object} />,
@@ -232,48 +252,50 @@ export const ClustersPage: React.FC<ClustersPageProps> = observer(({ extension: 
   }
 
   return (
-    <div className={styles["clusters-page"]}>
+    <div className={styles.clustersPage}>
       <style>{pageInlineStyles}</style>
 
-      <div className={styles["tabs"]}>
+      <div className={styles.tabs}>
         <button
           type="button"
-          className={`${styles["tab"]} ${activeTab === "sveltos" ? styles["active"] : ""}`}
+          className={`${styles.tab} ${activeTab === "sveltos" ? styles.active : ""}`}
           onClick={() => setActiveTab("sveltos")}
         >
           Sveltos Clusters
         </button>
         <button
           type="button"
-          className={`${styles["tab"]} ${activeTab === "capi" ? styles["active"] : ""}`}
+          className={`${styles.tab} ${activeTab === "capi" ? styles.active : ""}`}
           onClick={() => setActiveTab("capi")}
         >
           ClusterAPI Clusters
         </button>
       </div>
 
-      <div className={styles["tab-content"]}>
+      <div className={styles.tabContent}>
         {activeTab === "sveltos" && apisReady && sveltosStore && (
           <KubeObjectListLayout<SveltosCluster, SveltosClusterApi>
-            className={styles["tab-content"]}
+            className={styles.tabContent}
             tableId="sveltoclustersTable"
             store={sveltosStore}
             renderHeaderTitle={SveltosCluster.crd.title}
-            sortingCallbacks={sveltosSortingCallbacks}
+            sortingCallbacks={sveltosSortingCallbacksWithAgent}
             searchFilters={sveltosSearchFilters}
             renderTableHeader={sveltosTableHeader}
             renderTableContents={renderSveltosRow}
           />
         )}
         {activeTab === "sveltos" && apisReady && !sveltosStore && (
-          <div className={styles["empty-state"]}>
-            <h2>SveltosCluster CRD not found</h2>
-            <p>The SveltosCluster CRD is not installed on this cluster. Install Sveltos to manage clusters.</p>
+          <div className={styles.emptyState}>
+            <div className={styles.emptyStateCard}>
+              <h2>SveltosCluster CRD not found</h2>
+              <p>The SveltosCluster CRD is not installed on this cluster. Install Sveltos to manage clusters.</p>
+            </div>
           </div>
         )}
         {activeTab === "capi" && apisReady && capiStore && capiAvailable && (
           <KubeObjectListLayout<CapiCluster, CapiClusterApi>
-            className={styles["tab-content"]}
+            className={styles.tabContent}
             tableId="capiclustersTable"
             store={capiStore}
             renderHeaderTitle={CapiCluster.crd.title}
@@ -284,17 +306,21 @@ export const ClustersPage: React.FC<ClustersPageProps> = observer(({ extension: 
           />
         )}
         {activeTab === "capi" && apisReady && (!capiStore || !capiAvailable) && (
-          <div className={styles["empty-state"]}>
-            <h2>ClusterAPI not detected</h2>
-            <p>
-              The ClusterAPI (CAPI) CRDs are not installed on this cluster. Install ClusterAPI to manage infrastructure
-              clusters.
-            </p>
+          <div className={styles.emptyState}>
+            <div className={styles.emptyStateCard}>
+              <h2>ClusterAPI not detected</h2>
+              <p>
+                The ClusterAPI (CAPI) CRDs are not installed on this cluster. Install ClusterAPI to manage
+                infrastructure clusters.
+              </p>
+            </div>
           </div>
         )}
         {!apisReady && (
-          <div className={styles["empty-state"]}>
-            <p>Loading clusters…</p>
+          <div className={styles.emptyState}>
+            <div className={styles.emptyStateCard}>
+              <p>Loading clusters…</p>
+            </div>
           </div>
         )}
       </div>

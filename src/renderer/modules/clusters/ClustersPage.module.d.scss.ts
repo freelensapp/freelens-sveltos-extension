@@ -1,16 +1,22 @@
 declare const classNames: {
   readonly clustersPage: "clustersPage";
-  readonly pageInlineStyles: "pageInlineStyles";
   readonly tabs: "tabs";
   readonly tab: "tab";
   readonly active: "active";
   readonly tabContent: "tabContent";
   readonly statusBadge: "statusBadge";
+  readonly statusDot: "statusDot";
   readonly ready: "ready";
   readonly notReady: "notReady";
+  readonly agentBadge: "agentBadge";
+  readonly agentDot: "agentDot";
+  readonly ok: "ok";
+  readonly error: "error";
+  readonly unknown: "unknown";
   readonly pausedBadge: "pausedBadge";
   readonly pullModeBadge: "pullModeBadge";
   readonly versionText: "versionText";
   readonly emptyState: "emptyState";
+  readonly emptyStateCard: "emptyStateCard";
 };
 export = classNames;

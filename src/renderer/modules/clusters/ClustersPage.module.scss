@@ -6,11 +6,8 @@
 .clusters-page {
   display: flex;
   flex-direction: column;
-  height: 100%;
-}
-
-.page-inline-styles {
-  display: none;
+  min-height: 100%;
+  background: var(--layoutBackground);
 }
 
 .tabs {
@@ -47,25 +44,61 @@
 .tab-content {
   flex: 1;
   overflow: hidden;
+  min-height: 0;
+  background: var(--layoutBackground);
 }
 
 .status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 
   &.ready {
-    background: rgba(82, 196, 26, 0.15);
-    color: #52c41a;
+    background: #52c41a;
+    box-shadow: 0 0 4px rgba(82, 196, 26, 0.6);
   }
 
   &.not-ready {
-    background: rgba(255, 77, 79, 0.15);
-    color: #ff4d4f;
+    background: #ff4d4f;
+    box-shadow: 0 0 4px rgba(255, 77, 79, 0.5);
+  }
+}
+
+.agent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.agent-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.ok {
+    background: #52c41a;
+    box-shadow: 0 0 4px rgba(82, 196, 26, 0.6);
+  }
+
+  &.error {
+    background: #ff4d4f;
+    box-shadow: 0 0 4px rgba(255, 77, 79, 0.5);
+  }
+
+  &.unknown {
+    background: var(--textColorSecondary);
   }
 }
 
@@ -99,23 +132,44 @@
 
 .empty-state {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
-  color: var(--textColorSecondary);
-  text-align: center;
+  padding: 64px 24px;
+}
+
+.empty-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 28px 32px;
+  max-width: 560px;
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--colorInfo) 28%, transparent);
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at top left,
+      color-mix(in srgb, var(--colorInfo) 12%, transparent),
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--layoutBackground) 92%, white 8%),
+      var(--layoutBackground)
+    );
+  box-shadow: 0 16px 40px rgb(0 0 0 / 14%);
 
   h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 16px 0 8px;
+    margin: 0 0 10px;
+    font-size: 20px;
+    font-weight: 700;
     color: var(--textColorPrimary);
   }
 
   p {
+    margin: 0;
     font-size: 13px;
-    line-height: 1.5;
-    max-width: 400px;
+    line-height: 1.6;
+    color: var(--textColorSecondary);
   }
 }
