@@ -1,11 +1,9 @@
 import { Renderer } from "@freelensapp/extensions";
-import * as MobxReact from "mobx-react";
 import { withErrorPage } from "../components/error-page";
 import { Sveltos, type SveltosApi } from "../k8s/sveltos/sveltos-v1alpha2";
+import { observer } from "../utils/mobx";
 import styles from "./sveltos-page.module.scss";
 import stylesInline from "./sveltos-page.module.scss?inline";
-
-const { observer } = MobxReact;
 
 const {
   Component: { BadgeBoolean, KubeObjectAge, KubeObjectListLayout, LinkToNamespace, WithTooltip },
