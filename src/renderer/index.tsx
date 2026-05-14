@@ -24,6 +24,7 @@ import {
 } from "./menus/sveltos-active-toggle-menu-item-v1alpha2";
 import { ClustersPage } from "./modules/clusters";
 import { Overview } from "./modules/overview";
+import { ProfilesPage } from "./modules/profiles";
 import { SveltosPage as SveltosPageV1alpha1 } from "./pages/sveltos-page-v1alpha1";
 import { SveltosPage as SveltosPageV1alpha2 } from "./pages/sveltos-page-v1alpha2";
 import { SveltosPreferenceHint, SveltosPreferenceInput } from "./preferences/sveltos-preference";
@@ -100,6 +101,12 @@ export default class SveltosRenderer extends Renderer.LensExtension {
         Page: () => <ClustersPage extension={this} />,
       },
     },
+    {
+      id: "sveltos-profiles",
+      components: {
+        Page: () => <ProfilesPage extension={this} />,
+      },
+    },
   ];
 
   clusterPageMenus = [
@@ -123,6 +130,13 @@ export default class SveltosRenderer extends Renderer.LensExtension {
       parentId: "sveltos",
       title: "Clusters",
       target: { pageId: "sveltos-clusters" },
+      components: {},
+    },
+    {
+      id: "sveltos-profiles",
+      parentId: "sveltos",
+      title: "Profiles",
+      target: { pageId: "sveltos-profiles" },
       components: {},
     },
   ];
