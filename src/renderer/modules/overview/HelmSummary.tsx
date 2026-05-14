@@ -12,35 +12,62 @@ import styles from "./Overview.module.scss";
 const { Component } = Renderer;
 
 interface HelmSummaryProps {
-  totalReleases: number;
+  clusterProfiles: number;
+  profiles: number;
+  clusterSummaries: number;
+  pullModeClusters: number;
   clustersByNamespace: Record<string, number>;
 }
 
-export const HelmSummary: React.FC<HelmSummaryProps> = ({ totalReleases, clustersByNamespace }) => {
+export const HelmSummary: React.FC<HelmSummaryProps> = ({
+  clusterProfiles,
+  profiles,
+  clusterSummaries,
+  pullModeClusters,
+  clustersByNamespace,
+}) => {
   return (
     <div className={styles.overviewSection}>
       <h2>
         <Component.Icon material="settings" />
-        Deployment Summary
+        Resource Summary
       </h2>
 
       <div className={styles.deploymentGrid}>
         <div className={styles.deploymentCard}>
           <div className={styles.deploymentCardHeader}>
             <Component.Icon material="layers" />
-            <span>Helm Releases</span>
+            <span>Cluster Profiles</span>
           </div>
-          <div className={styles.deploymentCardValue}>{totalReleases}</div>
-          <div className={styles.deploymentCardDesc}>deployed releases</div>
+          <div className={styles.deploymentCardValue}>{clusterProfiles}</div>
+          <div className={styles.deploymentCardDesc}>global policy definitions</div>
         </div>
 
         <div className={styles.deploymentCard}>
           <div className={styles.deploymentCardHeader}>
-            <Component.Icon material="folder" />
-            <span>Namespaces</span>
+            <Component.Icon material="description" />
+            <span>Profiles</span>
           </div>
-          <div className={styles.deploymentCardValue}>{Object.keys(clustersByNamespace).length}</div>
-          <div className={styles.deploymentCardDesc}>with clusters</div>
+          <div className={styles.deploymentCardValue}>{profiles}</div>
+          <div className={styles.deploymentCardDesc}>namespaced policy definitions</div>
+        </div>
+
+        <div className={styles.deploymentCard}>
+          <div className={styles.deploymentCardHeader}>
+            <Component.Icon material="assignment" />
+            <span>Cluster Summaries</span>
+          </div>
+          <div className={styles.deploymentCardValue}>{clusterSummaries}</div>
+          <div className={styles.deploymentCardDesc}>profile-to-cluster status entries</div>
+        </div>
+
+        <div className={styles.deploymentCard}>
+          <div className={styles.deploymentCardHeader}>
+            <Component.Icon material="sync_alt" />
+            <span>Pull Mode Clusters</span>
+          </div>
+          <div className={styles.deploymentCardValue}>{pullModeClusters}</div>
+          <div className={styles.deploymentCardDesc}>agent-based management clusters</div>
         </div>
 
         {Object.keys(clustersByNamespace).length > 0 && (

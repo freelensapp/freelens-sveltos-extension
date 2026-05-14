@@ -6,12 +6,18 @@
 export interface ClusterStats {
   capiTotal: number;
   capiReady: number;
+  capiNotReady: number;
   sveltosTotal: number;
   sveltosReady: number;
+  sveltosNotReady: number;
+  pullModeClusters: number;
 }
 
-export interface HelmStats {
-  totalReleases: number;
+export interface ResourceStats {
+  clusterProfiles: number;
+  profiles: number;
+  clusterSummaries: number;
+  eventTriggers: number;
 }
 
 export interface EventStats {
@@ -27,7 +33,7 @@ export interface EventStats {
 
 export interface OverviewData {
   clusters: ClusterStats;
-  helm: HelmStats;
+  resources: ResourceStats;
   events: EventStats;
   clustersByNamespace: Record<string, number>;
   isLoading: boolean;

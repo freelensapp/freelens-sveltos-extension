@@ -4,6 +4,5 @@
  */
 
 export { Overview } from "./Overview";
-export { useOverviewData } from "./useOverviewData";
 
-export type { ClusterStats, EventStats, HelmStats, OverviewData } from "./types";
+export type { ClusterStats, EventStats, OverviewData, ResourceStats } from "./types";
