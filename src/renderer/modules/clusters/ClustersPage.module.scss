@@ -1,0 +1,121 @@
+/**
+ * Copyright (c) Freelens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.clusters-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.page-inline-styles {
+  display: none;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--layoutBorderColor);
+  margin-bottom: 0;
+  padding: 0 16px;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--textColorSecondary);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: var(--textColorPrimary);
+  }
+
+  &.active {
+    color: var(--highlightColor);
+    border-bottom-color: var(--highlightColor);
+    font-weight: 600;
+  }
+}
+
+.tab-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+
+  &.ready {
+    background: rgba(82, 196, 26, 0.15);
+    color: #52c41a;
+  }
+
+  &.not-ready {
+    background: rgba(255, 77, 79, 0.15);
+    color: #ff4d4f;
+  }
+}
+
+.paused-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(250, 173, 20, 0.15);
+  color: #faad14;
+}
+
+.pull-mode-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(24, 144, 255, 0.15);
+  color: #1890ff;
+}
+
+.version-text {
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: var(--textColorSecondary);
+  text-align: center;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 16px 0 8px;
+    color: var(--textColorPrimary);
+  }
+
+  p {
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 400px;
+  }
+}
