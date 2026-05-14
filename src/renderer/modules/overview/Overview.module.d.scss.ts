@@ -29,8 +29,9 @@ declare const classNames: {
   readonly healthy: "healthy";
   readonly warning: "warning";
   readonly deploymentGrid: "deploymentGrid";
+  readonly namespaceSection: "namespaceSection";
+  readonly namespaceSectionHeader: "namespaceSectionHeader";
   readonly deploymentCard: "deploymentCard";
-  readonly fullWidth: "fullWidth";
   readonly deploymentCardHeader: "deploymentCardHeader";
   readonly deploymentCardValue: "deploymentCardValue";
   readonly deploymentCardDesc: "deploymentCardDesc";

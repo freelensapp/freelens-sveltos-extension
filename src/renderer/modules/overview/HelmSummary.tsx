@@ -71,8 +71,8 @@ export const HelmSummary: React.FC<HelmSummaryProps> = ({
         </div>
 
         {Object.keys(clustersByNamespace).length > 0 && (
-          <div className={`${styles.deploymentCard} ${styles.fullWidth}`}>
-            <div className={styles.deploymentCardHeader}>
+          <div className={styles.namespaceSection}>
+            <div className={styles.namespaceSectionHeader}>
               <Component.Icon material="view_list" />
               <span>Clusters by Namespace</span>
             </div>
