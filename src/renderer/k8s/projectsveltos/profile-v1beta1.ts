@@ -7,9 +7,23 @@ import { Renderer } from "@freelensapp/extensions";
 
 import type { SveltosKubeObjectCRD } from "../types";
 
+export interface ProfileClusterSelectorMatchExpression {
+  key: string;
+  operator: string;
+  values?: string[];
+}
+
+export interface ProfileClusterSelector {
+  matchLabels?: Record<string, string>;
+  matchExpressions?: ProfileClusterSelectorMatchExpression[];
+}
+
 export interface ProfileSpec {
   syncMode?: string;
   tier?: number;
+  clusterSelector?: ProfileClusterSelector;
+  stopMatchingBehavior?: string;
+  reloader?: boolean;
 }
 
 export interface ProfileStatus {}

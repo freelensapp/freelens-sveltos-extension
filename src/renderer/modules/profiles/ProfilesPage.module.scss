@@ -1,0 +1,107 @@
+/**
+ * Copyright (c) Freelens Authors. All rights reserved.
+ * Licensed under MIT License. See LICENSE in root directory for more information.
+ */
+
+.profiles-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--layoutBackground);
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--layoutBorderColor);
+  margin-bottom: 0;
+  padding: 0 16px;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--textColorSecondary);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: var(--textColorPrimary);
+  }
+
+  &.active {
+    color: var(--highlightColor);
+    border-bottom-color: var(--highlightColor);
+    font-weight: 600;
+  }
+}
+
+.tab-content {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+  background: var(--layoutBackground);
+}
+
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--colorInfo) 18%, transparent);
+  color: var(--colorInfo);
+  border: 1px solid color-mix(in srgb, var(--colorInfo) 35%, transparent);
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+}
+
+.empty-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 28px 32px;
+  max-width: 560px;
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--colorInfo) 28%, transparent);
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at top left,
+      color-mix(in srgb, var(--colorInfo) 12%, transparent),
+      transparent 40%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--layoutBackground) 92%, white 8%),
+      var(--layoutBackground)
+    );
+  box-shadow: 0 16px 40px rgb(0 0 0 / 14%);
+
+  h2 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--textColorPrimary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--textColorSecondary);
+  }
+}
