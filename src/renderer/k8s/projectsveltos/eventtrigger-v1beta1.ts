@@ -33,5 +33,3 @@ export class EventTrigger extends Renderer.K8sApi.LensExtensionKubeObject<
 
 export class EventTriggerApi extends Renderer.K8sApi.KubeApi<EventTrigger> {}
 export class EventTriggerStore extends Renderer.K8sApi.KubeObjectStore<EventTrigger, EventTriggerApi> {}
-
-export const eventTriggerApi = new EventTriggerApi({ objectConstructor: EventTrigger });

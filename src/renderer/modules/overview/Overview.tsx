@@ -8,12 +8,15 @@
 import { Renderer } from "@freelensapp/extensions";
 import * as MobxReact from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
-import { CapiCluster } from "../../k8s/clusterapi/cluster-v1beta1";
-import { ClusterProfile } from "../../k8s/projectsveltos/clusterprofile-v1beta1";
-import { ClusterSummary as ClusterSummaryResource } from "../../k8s/projectsveltos/clustersummary-v1beta1";
-import { EventTrigger } from "../../k8s/projectsveltos/eventtrigger-v1beta1";
-import { Profile } from "../../k8s/projectsveltos/profile-v1beta1";
-import { SveltosCluster } from "../../k8s/projectsveltos/sveltoscluster-v1beta1";
+import { CapiCluster, CapiClusterApi } from "../../k8s/clusterapi/cluster-v1beta1";
+import { ClusterProfile, ClusterProfileApi } from "../../k8s/projectsveltos/clusterprofile-v1beta1";
+import {
+  ClusterSummaryApi,
+  ClusterSummary as ClusterSummaryResource,
+} from "../../k8s/projectsveltos/clustersummary-v1beta1";
+import { EventTrigger, EventTriggerApi } from "../../k8s/projectsveltos/eventtrigger-v1beta1";
+import { Profile, ProfileApi } from "../../k8s/projectsveltos/profile-v1beta1";
+import { SveltosCluster, SveltosClusterApi } from "../../k8s/projectsveltos/sveltoscluster-v1beta1";
 import { ClusterSummary } from "./ClusterSummary";
 import { EventsSummary } from "./EventsSummary";
 import { HelmSummary } from "./HelmSummary";
@@ -25,6 +28,8 @@ import type { EventStats } from "./types";
 
 const { observer } = MobxReact;
 const { Component } = Renderer;
+
+let apisRegistered = false;
 
 export interface OverviewProps {
   extension: Renderer.LensExtension;
@@ -64,6 +69,19 @@ function clustersByNamespace(items: { getNs: () => string | undefined }[]): Reco
   return result;
 }
 
+function ensureApisRegistered(): void {
+  if (apisRegistered) return;
+
+  new ClusterProfileApi({ objectConstructor: ClusterProfile });
+  new ProfileApi({ objectConstructor: Profile });
+  new ClusterSummaryApi({ objectConstructor: ClusterSummaryResource });
+  new EventTriggerApi({ objectConstructor: EventTrigger });
+  new SveltosClusterApi({ objectConstructor: SveltosCluster });
+  new CapiClusterApi({ objectConstructor: CapiCluster });
+
+  apisRegistered = true;
+}
+
 export const Overview: React.FC<OverviewProps> = observer(({ extension: _extension }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -76,6 +94,9 @@ export const Overview: React.FC<OverviewProps> = observer(({ extension: _extensi
 
     (async () => {
       try {
+        // KubeApi requires cluster-frame request context, so register lazily here (not at module import time).
+        ensureApisRegistered();
+
         const { namespaceStore, eventApi, apiManager } = Renderer.K8sApi;
 
         await namespaceStore.loadAll({ namespaces: [], reqInit: { signal: controller.signal } });

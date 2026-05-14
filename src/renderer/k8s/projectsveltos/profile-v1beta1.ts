@@ -34,5 +34,3 @@ export class Profile extends Renderer.K8sApi.LensExtensionKubeObject<
 
 export class ProfileApi extends Renderer.K8sApi.KubeApi<Profile> {}
 export class ProfileStore extends Renderer.K8sApi.KubeObjectStore<Profile, ProfileApi> {}
-
-export const profileApi = new ProfileApi({ objectConstructor: Profile });

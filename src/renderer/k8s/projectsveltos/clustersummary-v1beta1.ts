@@ -35,5 +35,3 @@ export class ClusterSummary extends Renderer.K8sApi.LensExtensionKubeObject<
 
 export class ClusterSummaryApi extends Renderer.K8sApi.KubeApi<ClusterSummary> {}
 export class ClusterSummaryStore extends Renderer.K8sApi.KubeObjectStore<ClusterSummary, ClusterSummaryApi> {}
-
-export const clusterSummaryApi = new ClusterSummaryApi({ objectConstructor: ClusterSummary });

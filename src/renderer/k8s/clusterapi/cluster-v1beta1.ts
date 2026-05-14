@@ -43,5 +43,3 @@ export class CapiCluster extends Renderer.K8sApi.LensExtensionKubeObject<
 
 export class CapiClusterApi extends Renderer.K8sApi.KubeApi<CapiCluster> {}
 export class CapiClusterStore extends Renderer.K8sApi.KubeObjectStore<CapiCluster, CapiClusterApi> {}
-
-export const capiClusterApi = new CapiClusterApi({ objectConstructor: CapiCluster });

@@ -34,6 +34,3 @@ export class ClusterProfile extends Renderer.K8sApi.LensExtensionKubeObject<
 
 export class ClusterProfileApi extends Renderer.K8sApi.KubeApi<ClusterProfile> {}
 export class ClusterProfileStore extends Renderer.K8sApi.KubeObjectStore<ClusterProfile, ClusterProfileApi> {}
-
-// Instantiating the api triggers registration with apiManager (KubeApi constructor calls apiManager.registerApi).
-export const clusterProfileApi = new ClusterProfileApi({ objectConstructor: ClusterProfile });

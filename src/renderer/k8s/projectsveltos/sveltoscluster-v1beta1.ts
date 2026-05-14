@@ -38,5 +38,3 @@ export class SveltosCluster extends Renderer.K8sApi.LensExtensionKubeObject<
 
 export class SveltosClusterApi extends Renderer.K8sApi.KubeApi<SveltosCluster> {}
 export class SveltosClusterStore extends Renderer.K8sApi.KubeObjectStore<SveltosCluster, SveltosClusterApi> {}
-
-export const sveltosClusterApi = new SveltosClusterApi({ objectConstructor: SveltosCluster });
