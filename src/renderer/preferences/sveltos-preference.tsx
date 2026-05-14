@@ -1,8 +1,6 @@
 import { Renderer } from "@freelensapp/extensions";
-import * as MobxReact from "mobx-react";
 import { SveltosPreferencesStore } from "../../common/store";
-
-const { observer } = MobxReact;
+import { observer } from "../utils/mobx";
 
 const {
   Component: { Checkbox },

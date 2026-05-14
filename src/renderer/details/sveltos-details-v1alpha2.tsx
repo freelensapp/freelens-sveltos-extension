@@ -1,11 +1,9 @@
 import { Renderer } from "@freelensapp/extensions";
-import * as MobxReact from "mobx-react";
 import { SveltosPreferencesStore } from "../../common/store";
 import { withErrorPage } from "../components/error-page";
+import { observer } from "../utils/mobx";
 
 import type { Sveltos } from "../k8s/sveltos/sveltos-v1alpha2";
-
-const { observer } = MobxReact;
 
 const {
   Component: { BadgeBoolean, DrawerItem, MarkdownViewer },

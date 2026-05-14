@@ -6,7 +6,6 @@
 // @ts-ignore
 
 import { Renderer } from "@freelensapp/extensions";
-import * as MobxReact from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
 import { CapiCluster, CapiClusterApi } from "../../k8s/clusterapi/cluster-v1beta1";
 import { ClusterProfile, ClusterProfileApi } from "../../k8s/projectsveltos/clusterprofile-v1beta1";
@@ -17,6 +16,7 @@ import {
 import { EventTrigger, EventTriggerApi } from "../../k8s/projectsveltos/eventtrigger-v1beta1";
 import { Profile, ProfileApi } from "../../k8s/projectsveltos/profile-v1beta1";
 import { SveltosCluster, SveltosClusterApi } from "../../k8s/projectsveltos/sveltoscluster-v1beta1";
+import { observer } from "../../utils/mobx";
 import { ClusterSummary } from "./ClusterSummary";
 import { EventsSummary } from "./EventsSummary";
 import { HelmSummary } from "./HelmSummary";
@@ -26,7 +26,6 @@ import { StatsCard } from "./StatsCard";
 
 import type { EventStats } from "./types";
 
-const { observer } = MobxReact;
 const { Component } = Renderer;
 
 let apisRegistered = false;
