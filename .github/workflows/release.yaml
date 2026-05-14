@@ -78,6 +78,9 @@ jobs:
             --tag ${dist_tag}
         env:
           NPM_CONFIG_PROVENANCE: "true"
+          # Used while npm trusted publishing (OIDC) is being bootstrapped.
+          # Once the trusted publisher is registered on npmjs.com this can be removed.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         continue-on-error: true
 
       - name: Publish npm packages (retry)
@@ -93,6 +96,7 @@ jobs:
             --tag ${dist_tag}
         env:
           NPM_CONFIG_PROVENANCE: "true"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         continue-on-error: true
 
       - name: Publish npm packages (retry 2)
@@ -107,6 +111,7 @@ jobs:
             --tag ${dist_tag}
         env:
           NPM_CONFIG_PROVENANCE: "true"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create release
         uses: softprops/action-gh-release@v3
