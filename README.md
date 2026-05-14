@@ -23,25 +23,9 @@ for more informations.
 - Kubernetes >= 1.24
 - Freelens >= 1.8.0
 
-## API supported
+## Work In Progress
 
-- sveltos.freelens.app/v1alpha1
-- sveltos.freelens.app/v1alpha2
-
-To install Custom Resource Definition for this sveltos run:
-
-```sh
-kubectl apply -k sveltos/v1alpha1/crds
-kubectl apply -k sveltos/v1alpha2/crds
-```
-
-Sveltos provide a resource for test:
-
-```sh
-kubectl apply -k sveltos/v1alpha2/test
-# or
-kubectl apply -k sveltos/v1alpha1/test
-```
+Warning: currently this repo it's still work in progress!
 
 ## Install
 
