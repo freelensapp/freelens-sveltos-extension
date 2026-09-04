@@ -25,10 +25,10 @@ importers:
         version: 17.0.91
       '@vitejs/plugin-react':
         specifier: ^6.0.1
-        version: 6.0.1(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0))
+        version: 6.0.1(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0))
       electron-vite:
         specifier: ^5.0.0
-        version: 5.0.0(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0))
+        version: 5.0.0(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0))
       mobx:
         specifier: 6.13.7
         version: 6.13.7
@@ -39,20 +39,20 @@ importers:
         specifier: 17.0.2
         version: 17.0.2
       sass:
-        specifier: ^1.99.0
-        version: 1.99.0
+        specifier: ^1.104.0
+        version: 1.104.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
       vite:
         specifier: ^8.0.10
-        version: 8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0)
+        version: 8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0)
       vite-plugin-external:
         specifier: ^6.2.2
         version: 6.2.2
       vite-plugin-sass-dts:
         specifier: ^1.3.37
-        version: 1.3.37(postcss@8.5.13)(prettier@3.6.2)(sass-embedded@1.89.2)(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0))
+        version: 1.3.37(postcss@8.5.13)(prettier@3.6.2)(sass-embedded@1.89.2)(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0))
 
 packages:
 
@@ -1425,6 +1425,10 @@ packages:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
 
+  chokidar@5.0.0:
+    resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
+    engines: {node: '>= 20.19.0'}
+
   chownr@3.0.0:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
     engines: {node: '>=18'}
@@ -1511,6 +1515,7 @@ packages:
 
   crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
 
   crypto-random-string@2.0.0:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
@@ -2574,6 +2579,10 @@ packages:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
 
+  readdirp@5.1.1:
+    resolution: {integrity: sha512-Kko+Y5XQ6fM+Ce3dq3m9YGxnacYZYl9cA1wZjaF3Vbry2L3i1qVg8+CAgNPsXRArPMUMCaOR7oa9Nqntc43JKA==}
+    engines: {node: '>= 20.19.0'}
+
   redux@4.2.1:
     resolution: {integrity: sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==}
 
@@ -2750,9 +2759,9 @@ packages:
     engines: {node: '>=16.0.0'}
     hasBin: true
 
-  sass@1.99.0:
-    resolution: {integrity: sha512-kgW13M54DUB7IsIRM5LvJkNlpH+WhMpooUcaWGFARkF1Tc82v9mIWkCbCYf+MBvpIUBSeSOTilpZjEPr2VYE6Q==}
-    engines: {node: '>=14.0.0'}
+  sass@1.104.0:
+    resolution: {integrity: sha512-btHMApW2bgolvClhRW8AlQJzgI9lUB3pPSofBQQT+E46GWvf9o0TVQ13SYv5riWZVFyPN+JNz3TKW9XhBlc10w==}
+    engines: {node: '>=20.19.0'}
     hasBin: true
 
   sax@1.3.0:
@@ -4565,10 +4574,10 @@ snapshots:
       '@types/node': 22.19.17
     optional: true
 
-  '@vitejs/plugin-react@6.0.1(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0))':
+  '@vitejs/plugin-react@6.0.1(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-rc.7
-      vite: 8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0)
+      vite: 8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0)
 
   '@xterm/addon-fit@0.11.0': {}
 
@@ -4740,6 +4749,10 @@ snapshots:
   chokidar@4.0.3:
     dependencies:
       readdirp: 4.1.2
+
+  chokidar@5.0.0:
+    dependencies:
+      readdirp: 5.1.1
 
   chownr@3.0.0: {}
 
@@ -4921,7 +4934,7 @@ snapshots:
 
   electron-to-chromium@1.5.187: {}
 
-  electron-vite@5.0.0(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0)):
+  electron-vite@5.0.0(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0)):
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-arrow-functions': 7.27.1(@babel/core@7.29.0)
@@ -4929,7 +4942,7 @@ snapshots:
       esbuild: 0.25.12
       magic-string: 0.30.21
       picocolors: 1.1.1
-      vite: 8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0)
+      vite: 8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -5913,6 +5926,8 @@ snapshots:
 
   readdirp@4.1.2: {}
 
+  readdirp@5.1.1: {}
+
   redux@4.2.1:
     dependencies:
       '@babel/runtime': 7.27.6
@@ -6073,9 +6088,9 @@ snapshots:
       sass-embedded-win32-arm64: 1.89.2
       sass-embedded-win32-x64: 1.89.2
 
-  sass@1.99.0:
+  sass@1.104.0:
     dependencies:
-      chokidar: 4.0.3
+      chokidar: 5.0.0
       immutable: 5.1.5
       source-map-js: 1.2.1
     optionalDependencies:
@@ -6363,15 +6378,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-sass-dts@1.3.37(postcss@8.5.13)(prettier@3.6.2)(sass-embedded@1.89.2)(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0)):
+  vite-plugin-sass-dts@1.3.37(postcss@8.5.13)(prettier@3.6.2)(sass-embedded@1.89.2)(vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0)):
     dependencies:
       postcss: 8.5.13
       postcss-js: 4.0.1(postcss@8.5.13)
       prettier: 3.6.2
       sass-embedded: 1.89.2
-      vite: 8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0)
+      vite: 8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0)
 
-  vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.99.0)(stylus@0.62.0)(terser@5.39.0):
+  vite@8.0.10(@types/node@22.19.17)(esbuild@0.27.2)(jiti@2.4.2)(less@4.4.0)(sass-embedded@1.89.2)(sass@1.104.0)(stylus@0.62.0)(terser@5.39.0):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
@@ -6384,7 +6399,7 @@ snapshots:
       fsevents: 2.3.3
       jiti: 2.4.2
       less: 4.4.0
-      sass: 1.99.0
+      sass: 1.104.0
       sass-embedded: 1.89.2
       stylus: 0.62.0
       terser: 5.39.0
