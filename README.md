@@ -18,10 +18,12 @@ directly from the management cluster.
 
 A `Sveltos` group is added to the cluster sidebar with the following pages:
 
+<!-- markdownlint-disable MD013 -->
+
 | Page | Resource | What it shows |
 | --- | --- | --- |
 | Overview | all of the below | Counters for every Sveltos resource, ready clusters and failing add-ons |
-| Sveltos Clusters | `SveltosCluster` | Readiness, connection status, Kubernetes version, paused state |
+| Sveltos Clusters | `SveltosCluster`, ClusterAPI `Cluster` | Readiness, connection status, Kubernetes version, paused state, with a switch between SveltosCluster and ClusterAPI clusters |
 | Cluster Profiles | `ClusterProfile` | Sync mode, tier, dependencies, cluster selector, matching clusters |
 | Profiles | `Profile` | Same as above, namespace scoped |
 | Dependencies | `ClusterProfile`, `Profile` | `dependsOn` graph by deployment stage, profile health, missing profiles and cycles |
@@ -30,6 +32,8 @@ A `Sveltos` group is added to the cluster sidebar with the following pages:
 | Event Sources | `EventSource` | Watched resources and CloudEvent match criteria |
 | Event Triggers | `EventTrigger` | Referenced event source, matching clusters, deployment status |
 | Classifiers | `Classifier` | Classifier labels, version constraints, matching clusters |
+
+<!-- markdownlint-enable MD013 -->
 
 The **Sveltos Clusters** page is a dashboard rather than a plain list: clusters
 are rendered as cards (icon, connection status, Kubernetes version, labels,
