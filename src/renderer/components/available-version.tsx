@@ -25,13 +25,12 @@ interface VersionVariant<T extends AvailableVersionPageProps> {
  * @param variants - Array of version variants, ordered by preference
  * @returns A page component that auto-detects a valid API version if present
  *
- * @sveltos
+ * @example
  * ```tsx
  * createAvailableVersionPage(
- *   "Sveltos",
+ *   "Cluster Profiles",
  *   [
- *     { kubeObjectClass: SveltosV1alpha2, PageComponent: SveltosV1alpha2, version: "v1alpha2" },
- *     { kubeObjectClass: SveltosV1alpha1, PageComponent: SveltosV1alpha1, version: "v1alpha1" },
+ *     { kubeObjectClass: ClusterProfile, PageComponent: ClusterProfilesPage, version: "v1beta1" },
  *   ]
  * );
  * ```

@@ -87,7 +87,7 @@ describe("extensions page tests", () => {
     // Trigger extension install
     const textbox = window.getByPlaceholder("Name or file path or URL");
     console.log("await textbox.fill");
-    await textbox.fill(process.env.EXTENSION_PATH || "@freelensapp/sveltos-extension");
+    await textbox.fill(process.env.EXTENSION_PATH || "@freelensapp/example-extension");
     const install_button_selector = 'button[class*="Button install-module__button--"]';
     console.log("await window.click [data-waiting=false]");
     await window.click(install_button_selector.concat("[data-waiting=false]"));
@@ -97,16 +97,25 @@ describe("extensions page tests", () => {
     const installedExtensionName = await (
       await window.waitForSelector('div[class*="installed-extensions-module__extensionName--"]')
     ).textContent();
-    expect(installedExtensionName).toBe("@freelensapp/sveltos-extension");
+    expect(installedExtensionName).toBe("@freelensapp/example-extension");
     const installedExtensionState = await (
       await window.waitForSelector('div[class*="installed-extensions-module__enabled--"]')
     ).textContent();
     expect(installedExtensionState).toBe("Enabled");
-    console.log('await window.click i[data-testid*="close-notification-for-notification_"]');
-    await window.click('i[data-testid*="close-notification-for-notification_"]');
-    console.log('await window.click div[class*=[close-button-module__closeButton--"][aria-label="Close"]');
-    await window.click('div[class*="close-button-module__closeButton--"][aria-label="Close"]');
-  }, 15 * 1000);
+    // Dismiss any notifications so a notification still in its enter animation
+    // does not intercept pointer events on the elements behind it.
+    console.log("dismiss notifications");
+    const notificationCloseSelector =
+      'i[data-testid*="close-notification-for-notification_"], div[class*="close-button-module__closeButton--"][aria-label="Close"]';
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const closeButtons = await window.$$(notificationCloseSelector);
+      if (closeButtons.length === 0) break;
+      for (const closeButton of closeButtons) {
+        await closeButton.click({ force: true }).catch(() => {});
+      }
+      await window.waitForTimeout(200);
+    }
+  }, 120 * 1000);
 
   afterAll(
     async () => {

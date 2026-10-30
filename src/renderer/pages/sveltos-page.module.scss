@@ -1,19 +1,19 @@
 .page {
   :global(.TableCell) {
-    &.title {
-      flex-grow: 1.5;
-    }
-
-    &.active {
-      flex-grow: 0.4;
-    }
-
-    &.resumed {
-      flex-grow: 0.4;
-    }
-
     &.age {
       flex-grow: 0.3;
+    }
+
+    &.short {
+      flex-grow: 0.4;
+    }
+
+    &.medium {
+      flex-grow: 0.7;
+    }
+
+    &.wide {
+      flex-grow: 1.5;
     }
   }
 }
