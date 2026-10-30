@@ -1,0 +1,19 @@
+package.json
+  s_ded3bb0c88748e::t_5e46e38973b70b 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "97690ba17cee0b5f7b9c0e4273a1d39a07b172c7",
+  "prompts": {},
+  "sessions": {
+    "s_ded3bb0c88748e": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "ac072a19-de66-4baa-8b6a-c2b70427583f",
+        "model": "auto"
+      },
+      "human_author": "Alberto LL <alberto.lunghi@wolterskluwer.com>"
+    }
+  }
+}
