@@ -72,6 +72,7 @@ declare const classNames: {
   readonly statusOk: "statusOk";
   readonly statusProgress: "statusProgress";
   readonly statusProgressIcon: "statusProgressIcon";
+  readonly statusProgressSpin: "statusProgressSpin";
   readonly statusWarn: "statusWarn";
   readonly statusError: "statusError";
   readonly statusMuted: "statusMuted";
@@ -85,10 +86,7 @@ declare const classNames: {
   readonly metadataAdd: "metadataAdd";
   readonly metadataError: "metadataError";
   readonly tableScroll: "tableScroll";
-  readonly tableHead: "tableHead";
   readonly table: "table";
-  readonly tableRow: "tableRow";
-  readonly selected: "selected";
   readonly addonName: "addonName";
   readonly addonBadge: "addonBadge";
   readonly addonLogo: "addonLogo";

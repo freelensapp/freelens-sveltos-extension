@@ -1,5 +1,5 @@
+import { compareVersions, isStableVersion } from "../common/version";
 import { httpGet } from "./http";
-import { compareVersions, isStableVersion } from "./version";
 
 // The Atom feed is not subject to the 60 requests per hour of the REST API, which
 // is shared by every client behind the same address.
@@ -31,12 +31,9 @@ export function parseLatestReleaseTag(feed: string): string | undefined {
   return tags.filter(isStableVersion).sort((a, b) => compareVersions(b, a))[0];
 }
 
-/**
- * Runs in the main process on purpose: the renderer goes through the Chromium
- * network stack, which honours the Freelens proxy settings and the page CSP.
- */
-export async function fetchLatestSveltosRelease(insecureTls = false): Promise<string | undefined> {
-  const response = await httpGet(latestReleaseUrl, { accept: "application/atom+xml", insecureTls });
+/** Runs in the main process, out of reach of the page CSP of the renderer. */
+export async function fetchLatestSveltosRelease(): Promise<string | undefined> {
+  const response = await httpGet(latestReleaseUrl, { accept: "application/atom+xml" });
 
   if (response.status !== 200) throw new Error(`GitHub responded with ${response.status}`);
 

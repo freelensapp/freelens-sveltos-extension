@@ -1,6 +1,6 @@
 import { Common, Main } from "@freelensapp/extensions";
-import { fetchChartIcon, findChartIconRequest } from "../common/chart-icons";
-import { fetchHelmRelease, findHelmReleaseRequest } from "../common/helm-release";
+import { findChartIconRequest } from "../common/chart-icons";
+import { findHelmReleaseRequest } from "../common/helm-release";
 import {
   chartIconChannel,
   helmReleaseChannel,
@@ -8,9 +8,11 @@ import {
   metadataFilterChannel,
   uiSettingsChannel,
 } from "../common/ipc-channels";
-import { fetchLatestSveltosRelease, findLatestReleaseRequest, isLatestReleaseFresh } from "../common/latest-release";
 import { SveltosPreferencesStore } from "../common/store";
 import { emptyUiSettings, findUiSettingsRequest, mergeUiSettings } from "../common/ui-settings";
+import { fetchChartIcon } from "./chart-icons";
+import { fetchHelmRelease } from "./helm-release";
+import { fetchLatestSveltosRelease, findLatestReleaseRequest, isLatestReleaseFresh } from "./latest-release";
 
 const preferences = () => SveltosPreferencesStore.getInstanceOrCreate<SveltosPreferencesStore>();
 
@@ -19,7 +21,7 @@ async function getLatestRelease(force: boolean): Promise<string | undefined> {
 
   if (!force && isLatestReleaseFresh(store.latestReleaseCheckedAt)) return store.latestRelease;
 
-  const tag = await fetchLatestSveltosRelease(store.insecureTls);
+  const tag = await fetchLatestSveltosRelease();
 
   store.latestRelease = tag;
   store.latestReleaseCheckedAt = Date.now();
@@ -52,7 +54,7 @@ class SveltosIpcMain extends Main.Ipc {
         return undefined;
       }
 
-      return fetchChartIcon(request.iconUrl, preferences().insecureTls);
+      return fetchChartIcon(request.iconUrl);
     });
     // Helm keeps releases in the managed cluster, which only main can reach with the Sveltos kubeconfig.
     this.handle(helmReleaseChannel, (...args: unknown[]) => {

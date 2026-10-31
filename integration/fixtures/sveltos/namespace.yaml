@@ -1,0 +1,5 @@
+# The namespace of the test objects, which the Sveltos pages session selects.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: integration-tests

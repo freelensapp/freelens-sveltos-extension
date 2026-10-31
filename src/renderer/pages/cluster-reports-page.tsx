@@ -1,9 +1,7 @@
 import { Renderer } from "@freelensapp/extensions";
 import * as MobxReact from "mobx-react";
 import { ClusterReport, type ClusterReportApi } from "../api/config/cluster-report-v1beta1";
-import { withErrorPage } from "../components/error-page";
 import styles from "./sveltos-page.module.scss";
-import stylesInline from "./sveltos-page.module.scss?inline";
 
 const { observer } = MobxReact;
 
@@ -37,32 +35,29 @@ export interface ClusterReportsPageProps {
   extension: Renderer.LensExtension;
 }
 
-export const ClusterReportsPage = observer((props: ClusterReportsPageProps) =>
-  withErrorPage(props, () => {
-    const store = KubeObject.getStore<KubeObject>();
+export const ClusterReportsPage = observer((props: ClusterReportsPageProps) => {
+  const store = KubeObject.getStore<KubeObject>();
 
-    return (
-      <>
-        <style>{stylesInline}</style>
-        <KubeObjectListLayout<KubeObject, KubeObjectApi>
-          tableId={`${KubeObject.crd.plural}Table`}
-          isConfigurable
-          className={styles.page}
-          store={store}
-          sortingCallbacks={sortingCallbacks}
-          searchFilters={[(object: KubeObject) => object.getSearchFields()]}
-          renderHeaderTitle={KubeObject.crd.title}
-          renderTableHeader={renderTableHeader}
-          renderTableContents={(object: KubeObject) => [
-            <WithTooltip>{object.getName()}</WithTooltip>,
-            <LinkToNamespace namespace={object.getNs()} />,
-            <WithTooltip>{object.spec?.clusterName ?? "N/A"}</WithTooltip>,
-            <WithTooltip>{(object.status?.releaseReports ?? []).length}</WithTooltip>,
-            <WithTooltip>{KubeObject.getAllResourceReports(object).length}</WithTooltip>,
-            <KubeObjectAge object={object} key="age" />,
-          ]}
-        />
-      </>
-    );
-  }),
-);
+  return (
+    <>
+      <KubeObjectListLayout<KubeObject, KubeObjectApi>
+        tableId={`${KubeObject.crd.plural}Table`}
+        isConfigurable
+        className={styles.page}
+        store={store}
+        sortingCallbacks={sortingCallbacks}
+        searchFilters={[(object: KubeObject) => object.getSearchFields()]}
+        renderHeaderTitle={KubeObject.crd.title}
+        renderTableHeader={renderTableHeader}
+        renderTableContents={(object: KubeObject) => [
+          <WithTooltip>{object.getName()}</WithTooltip>,
+          <LinkToNamespace namespace={object.getNs()} />,
+          <WithTooltip>{object.spec?.clusterName ?? "N/A"}</WithTooltip>,
+          <WithTooltip>{(object.status?.releaseReports ?? []).length}</WithTooltip>,
+          <WithTooltip>{KubeObject.getAllResourceReports(object).length}</WithTooltip>,
+          <KubeObjectAge object={object} key="age" />,
+        ]}
+      />
+    </>
+  );
+});

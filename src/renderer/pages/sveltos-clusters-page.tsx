@@ -27,9 +27,7 @@ import { AddonsView } from "../components/addons-view";
 import { ClusterCard } from "../components/cluster-card";
 import { useColumnResize } from "../components/column-resize";
 import styles from "../components/dashboard.module.scss";
-import stylesInline from "../components/dashboard.module.scss?inline";
 import { DeployErrorsView } from "../components/deploy-errors-view";
-import { withErrorPage } from "../components/error-page";
 import { HelmReleaseView } from "../components/helm-release-view";
 import { LastUpdate } from "../components/last-update";
 import { useLatest } from "../components/row-cache";
@@ -197,227 +195,224 @@ export interface SveltosClustersPageProps {
   extension: Renderer.LensExtension;
 }
 
-export const SveltosClustersPage = observer((props: SveltosClustersPageProps) =>
-  withErrorPage(props, () => {
-    const capiStore = maybe(() => CapiCluster.getStore<CapiCluster>());
-    const [clusterType, setClusterType] = React.useState<ClusterType>("Sveltos");
-    const clusterStore = clusterType === "Capi" && capiStore ? capiStore : SveltosCluster.getStore<SveltosCluster>();
-    const summaryStore = maybe(() => ClusterSummary.getStore<ClusterSummary>());
-    const configurationStore = maybe(() => ClusterConfiguration.getStore<ClusterConfiguration>());
+export const SveltosClustersPage = observer((props: SveltosClustersPageProps) => {
+  const capiStore = maybe(() => CapiCluster.getStore<CapiCluster>());
+  const [clusterType, setClusterType] = React.useState<ClusterType>("Sveltos");
+  const clusterStore = clusterType === "Capi" && capiStore ? capiStore : SveltosCluster.getStore<SveltosCluster>();
+  const summaryStore = maybe(() => ClusterSummary.getStore<ClusterSummary>());
+  const configurationStore = maybe(() => ClusterConfiguration.getStore<ClusterConfiguration>());
 
-    const [view, setView] = React.useState<ViewMode>("table");
-    const [search, setSearch] = React.useState("");
-    const [status, setStatus] = React.useState(allStatuses);
-    const [selected, setSelected] = React.useState<string | undefined>();
-    const [selectedAddon, setSelectedAddon] = React.useState<string | undefined>();
+  const [view, setView] = React.useState<ViewMode>("table");
+  const [search, setSearch] = React.useState("");
+  const [status, setStatus] = React.useState(allStatuses);
+  const [selected, setSelected] = React.useState<string | undefined>();
+  const [selectedAddon, setSelectedAddon] = React.useState<string | undefined>();
 
-    // Same namespace filter as the rest of Freelens, so picking a namespace here or elsewhere applies to both.
-    const { namespaceStore } = Renderer.K8sApi;
-    const namespaceKey = namespaceStore.areAllSelectedImplicitly
-      ? undefined
-      : namespaceStore.contextNamespaces.join("\n");
-    const inNamespace = React.useMemo(() => {
-      const namespaces = namespaceKey === undefined ? undefined : new Set(namespaceKey.split("\n"));
+  // Same namespace filter as the rest of Freelens, so picking a namespace here or elsewhere applies to both.
+  const { namespaceStore } = Renderer.K8sApi;
+  const namespaceKey = namespaceStore.areAllSelectedImplicitly
+    ? undefined
+    : namespaceStore.contextNamespaces.join("\n");
+  const inNamespace = React.useMemo(() => {
+    const namespaces = namespaceKey === undefined ? undefined : new Set(namespaceKey.split("\n"));
 
-      return (namespace: string | undefined) => !namespaces || namespaces.has(namespace ?? "");
-    }, [namespaceKey]);
+    return (namespace: string | undefined) => !namespaces || namespaces.has(namespace ?? "");
+  }, [namespaceKey]);
 
-    // Clears the selection whenever the namespace filter or the cluster type changes.
-    React.useEffect(() => {
-      setSelected(undefined);
-      setSelectedAddon(undefined);
-    }, [namespaceKey, clusterType]);
+  // Clears the selection whenever the namespace filter or the cluster type changes.
+  React.useEffect(() => {
+    setSelected(undefined);
+    setSelectedAddon(undefined);
+  }, [namespaceKey, clusterType]);
 
-    // Separate subscriptions, so switching the cluster type does not reload every ClusterSummary.
-    React.useEffect(() => subscribeToStores([clusterStore]), [clusterStore]);
-    React.useEffect(
-      () => subscribeToStores([summaryStore, configurationStore].filter((store) => store !== null)),
-      [summaryStore, configurationStore],
-    );
+  // Separate subscriptions, so switching the cluster type does not reload every ClusterSummary.
+  React.useEffect(() => subscribeToStores([clusterStore]), [clusterStore]);
+  React.useEffect(
+    () => subscribeToStores([summaryStore, configurationStore].filter((store) => store !== null)),
+    [summaryStore, configurationStore],
+  );
 
-    const model = React.useMemo(
-      () => createClustersModel(clusterStore, summaryStore, configurationStore, clusterType),
-      [clusterStore, summaryStore, configurationStore, clusterType],
-    );
-    const { clusters: allClusters, addons, errors, stats } = model;
+  const model = React.useMemo(
+    () => createClustersModel(clusterStore, summaryStore, configurationStore, clusterType),
+    [clusterStore, summaryStore, configurationStore, clusterType],
+  );
+  const { clusters: allClusters, addons, errors, stats } = model;
 
-    const { clusters, statusCounts } = React.useMemo(() => {
-      const terms = parseSearchQuery(search);
-      const matching = allClusters
-        .map((cluster) => ({ cluster, status: getClusterStatus(cluster, stats.get(keyOf(cluster)) ?? emptyStats) }))
-        .filter(
-          (entry) =>
-            inNamespace(entry.cluster.getNs()) &&
-            matchesSearchQuery(terms, clusterSearchTarget(entry.cluster, entry.status)),
-        );
+  const { clusters, statusCounts } = React.useMemo(() => {
+    const terms = parseSearchQuery(search);
+    const matching = allClusters
+      .map((cluster) => ({ cluster, status: getClusterStatus(cluster, stats.get(keyOf(cluster)) ?? emptyStats) }))
+      .filter(
+        (entry) =>
+          inNamespace(entry.cluster.getNs()) &&
+          matchesSearchQuery(terms, clusterSearchTarget(entry.cluster, entry.status)),
+      );
 
-      return {
-        // Counted before the status filter, so every option shows how many clusters picking it leaves.
-        statusCounts: countByStatus(matching, (entry) => entry.status),
-        clusters: matching.filter((entry) => matchesStatus(entry.status, status)).map((entry) => entry.cluster),
-      };
-    }, [allClusters, stats, search, inNamespace, status]);
+    return {
+      // Counted before the status filter, so every option shows how many clusters picking it leaves.
+      statusCounts: countByStatus(matching, (entry) => entry.status),
+      clusters: matching.filter((entry) => matchesStatus(entry.status, status)).map((entry) => entry.cluster),
+    };
+  }, [allClusters, stats, search, inNamespace, status]);
 
-    const selectedCluster = clusters.find((cluster) => keyOf(cluster) === selected);
-    const selectedAddons = React.useMemo(
-      () =>
-        selected
-          ? addons.filter((addon) => clusterKey(addon.clusterNamespace, addon.clusterName) === selected)
-          : addons.filter((addon) => inNamespace(addon.clusterNamespace)),
-      [addons, selected, inNamespace],
-    );
-    const selectedAddonObject = addons.find((addon) => addon.id === selectedAddon);
-    const selectedHelmRelease =
-      selectedAddonObject?.type === "Helm" && selectedAddonObject.namespace ? selectedAddonObject : undefined;
-    const selectedAddonCluster = selectedHelmRelease
-      ? allClusters.find(
-          (cluster) =>
-            keyOf(cluster) === clusterKey(selectedHelmRelease.clusterNamespace, selectedHelmRelease.clusterName),
-        )
-      : undefined;
-    const selectedSecret = React.useMemo(
-      () =>
-        selectedHelmRelease
-          ? getKubeconfigSecretRef(
-              selectedHelmRelease,
-              selectedAddonCluster && !isCapi(selectedAddonCluster) ? selectedAddonCluster.spec : undefined,
-            )
-          : undefined,
-      [selectedHelmRelease, selectedAddonCluster],
-    );
-    const selectedErrors = React.useMemo(
-      () =>
-        selectedAddonObject
-          ? filterErrorsByAddon(errors, selectedAddonObject)
-          : selectedCluster
-            ? filterErrorsByCluster(errors, selectedCluster.getNs() ?? "", selectedCluster.getName())
-            : errors.filter((error) => inNamespace(error.clusterNamespace)),
-      [errors, selectedAddonObject, selectedCluster, inNamespace],
-    );
+  const selectedCluster = clusters.find((cluster) => keyOf(cluster) === selected);
+  const selectedAddons = React.useMemo(
+    () =>
+      selected
+        ? addons.filter((addon) => clusterKey(addon.clusterNamespace, addon.clusterName) === selected)
+        : addons.filter((addon) => inNamespace(addon.clusterNamespace)),
+    [addons, selected, inNamespace],
+  );
+  const selectedAddonObject = addons.find((addon) => addon.id === selectedAddon);
+  const selectedHelmRelease =
+    selectedAddonObject?.type === "Helm" && selectedAddonObject.namespace ? selectedAddonObject : undefined;
+  const selectedAddonCluster = selectedHelmRelease
+    ? allClusters.find(
+        (cluster) =>
+          keyOf(cluster) === clusterKey(selectedHelmRelease.clusterNamespace, selectedHelmRelease.clusterName),
+      )
+    : undefined;
+  const selectedSecret = React.useMemo(
+    () =>
+      selectedHelmRelease
+        ? getKubeconfigSecretRef(
+            selectedHelmRelease,
+            selectedAddonCluster && !isCapi(selectedAddonCluster) ? selectedAddonCluster.spec : undefined,
+          )
+        : undefined,
+    [selectedHelmRelease, selectedAddonCluster],
+  );
+  const selectedErrors = React.useMemo(
+    () =>
+      selectedAddonObject
+        ? filterErrorsByAddon(errors, selectedAddonObject)
+        : selectedCluster
+          ? filterErrorsByCluster(errors, selectedCluster.getNs() ?? "", selectedCluster.getName())
+          : errors.filter((error) => inNamespace(error.clusterNamespace)),
+    [errors, selectedAddonObject, selectedCluster, inNamespace],
+  );
 
-    const toggleSelection = React.useCallback((cluster: AnyCluster) => {
-      const key = keyOf(cluster);
+  const toggleSelection = React.useCallback((cluster: AnyCluster) => {
+    const key = keyOf(cluster);
 
-      setSelectedAddon(undefined);
-      setSelected((current) => (current === key ? undefined : key));
-    }, []);
-    const toggleAddon = React.useCallback(
-      (addon: Addon) => setSelectedAddon((current) => (current === addon.id ? undefined : addon.id)),
-      [],
-    );
-    const togglePause = React.useCallback((cluster: AnyCluster) => {
-      if (isCapi(cluster)) return;
+    setSelectedAddon(undefined);
+    setSelected((current) => (current === key ? undefined : key));
+  }, []);
+  const toggleAddon = React.useCallback(
+    (addon: Addon) => setSelectedAddon((current) => (current === addon.id ? undefined : addon.id)),
+    [],
+  );
+  const togglePause = React.useCallback((cluster: AnyCluster) => {
+    if (isCapi(cluster)) return;
 
-      void SveltosCluster.getStore<SveltosCluster>().patch(cluster, { spec: { paused: !getPaused(cluster) } }, "merge");
-    }, []);
+    void SveltosCluster.getStore<SveltosCluster>().patch(cluster, { spec: { paused: !getPaused(cluster) } }, "merge");
+  }, []);
 
-    const subtitle = selectedCluster ? `${selectedCluster.getNs()}/${selectedCluster.getName()}` : "all clusters";
+  const subtitle = selectedCluster ? `${selectedCluster.getNs()}/${selectedCluster.getName()}` : "all clusters";
 
-    return (
-      <>
-        <style>{stylesInline}</style>
-        <div className={styles.page}>
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>Sveltos Clusters</h2>
-              {capiStore ? (
-                <div className={styles.viewToggle}>
-                  {(
-                    [
-                      ["Sveltos", "SveltosCluster"],
-                      ["Capi", "ClusterAPI"],
-                    ] as const
-                  ).map(([value, label]) => (
-                    <button
-                      type="button"
-                      key={value}
-                      className={`${styles.viewToggleButton} ${clusterType === value ? styles.viewToggleButtonActive : ""}`}
-                      onClick={() => setClusterType(value)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-              <span className={styles.sectionSubtitle}>
-                {clusters.length} cluster{clusters.length === 1 ? "" : "s"}
-                {selected ? " · click the selected cluster again to clear the filter" : ""}
-              </span>
-              <div className={styles.spacer} />
-              <div className={styles.toolbar}>
-                <div className={styles.namespaceSelect}>
-                  <NamespaceSelectFilter id="sveltosClusterNamespace" />
-                </div>
-                <StatusFilter
-                  id="sveltosClusterStatus"
-                  value={status}
-                  counts={statusCounts}
-                  onChange={(value) => {
-                    setStatus(value);
-                    setSelected(undefined);
-                    setSelectedAddon(undefined);
-                  }}
-                />
-                <SearchInput
-                  className={styles.searchWide}
-                  value={search}
-                  onChange={(value: string) => setSearch(value)}
-                  placeholder="cloudProvider: aws, tier: dev"
-                  title="Filter by label or field, comma separated. Bare words search everywhere."
-                />
-                <ViewToggle value={view} onChange={setView} />
-                {view === "table" ? <ColumnsMenu tableId={tableId} columns={clusterColumns} /> : null}
-              </div>
-            </div>
-
-            {clusters.length === 0 ? (
-              <div className={styles.empty}>No cluster matches the current filters.</div>
-            ) : view === "cards" ? (
-              <div className={styles.cards}>
-                {clusters.map((cluster) => (
-                  <ClusterCard
-                    key={cluster.getId()}
-                    cluster={cluster}
-                    selected={keyOf(cluster) === selected}
-                    onSelect={() => toggleSelection(cluster)}
-                    {...(stats.get(keyOf(cluster)) ?? emptyStats)}
-                  />
+  return (
+    <>
+      <div className={styles.page}>
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Sveltos Clusters</h2>
+            {capiStore ? (
+              <div className={styles.viewToggle}>
+                {(
+                  [
+                    ["Sveltos", "SveltosCluster"],
+                    ["Capi", "ClusterAPI"],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    type="button"
+                    key={value}
+                    className={`${styles.viewToggleButton} ${clusterType === value ? styles.viewToggleButtonActive : ""}`}
+                    onClick={() => setClusterType(value)}
+                  >
+                    {label}
+                  </button>
                 ))}
               </div>
-            ) : (
-              <ClustersTable
-                clusters={clusters}
-                stats={stats}
-                selected={selected}
-                onSelect={toggleSelection}
-                onTogglePause={togglePause}
+            ) : null}
+            <span className={styles.sectionSubtitle}>
+              {clusters.length} cluster{clusters.length === 1 ? "" : "s"}
+              {selected ? " · click the selected cluster again to clear the filter" : ""}
+            </span>
+            <div className={styles.spacer} />
+            <div className={styles.toolbar}>
+              <div className={styles.namespaceSelect}>
+                <NamespaceSelectFilter id="sveltosClusterNamespace" />
+              </div>
+              <StatusFilter
+                id="sveltosClusterStatus"
+                value={status}
+                counts={statusCounts}
+                onChange={(value) => {
+                  setStatus(value);
+                  setSelected(undefined);
+                  setSelectedAddon(undefined);
+                }}
               />
-            )}
+              <SearchInput
+                className={styles.searchWide}
+                value={search}
+                onChange={(value: string) => setSearch(value)}
+                placeholder="cloudProvider: aws, tier: dev"
+                title="Filter by label or field, comma separated. Bare words search everywhere."
+              />
+              <ViewToggle value={view} onChange={setView} />
+              {view === "table" ? <ColumnsMenu tableId={tableId} columns={clusterColumns} /> : null}
+            </div>
           </div>
 
-          <AddonsView
-            addons={selectedAddons}
-            selectedAddonId={selectedAddon}
-            subtitle={subtitle}
-            onAddonSelect={toggleAddon}
-          />
-
-          {selectedHelmRelease?.namespace && selectedSecret ? (
-            <HelmReleaseView
-              key={selectedHelmRelease.id}
-              secret={selectedSecret}
-              namespace={selectedHelmRelease.namespace}
-              name={selectedHelmRelease.name}
-              subtitle={`${selectedHelmRelease.clusterNamespace}/${selectedHelmRelease.clusterName}`}
+          {clusters.length === 0 ? (
+            <div className={styles.empty}>No cluster matches the current filters.</div>
+          ) : view === "cards" ? (
+            <div className={styles.cards}>
+              {clusters.map((cluster) => (
+                <ClusterCard
+                  key={cluster.getId()}
+                  cluster={cluster}
+                  selected={keyOf(cluster) === selected}
+                  onSelect={() => toggleSelection(cluster)}
+                  {...(stats.get(keyOf(cluster)) ?? emptyStats)}
+                />
+              ))}
+            </div>
+          ) : (
+            <ClustersTable
+              clusters={clusters}
+              stats={stats}
+              selected={selected}
+              onSelect={toggleSelection}
+              onTogglePause={togglePause}
             />
-          ) : null}
-
-          <DeployErrorsView errors={selectedErrors} subtitle={subtitle} />
+          )}
         </div>
-      </>
-    );
-  }),
-);
+
+        <AddonsView
+          addons={selectedAddons}
+          selectedAddonId={selectedAddon}
+          subtitle={subtitle}
+          onAddonSelect={toggleAddon}
+        />
+
+        {selectedHelmRelease?.namespace && selectedSecret ? (
+          <HelmReleaseView
+            key={selectedHelmRelease.id}
+            secret={selectedSecret}
+            namespace={selectedHelmRelease.namespace}
+            name={selectedHelmRelease.name}
+            subtitle={`${selectedHelmRelease.clusterNamespace}/${selectedHelmRelease.clusterName}`}
+          />
+        ) : null}
+
+        <DeployErrorsView errors={selectedErrors} subtitle={subtitle} />
+      </div>
+    </>
+  );
+});
 
 interface ClusterColumn extends TableColumn {
   sortBy?: keyof typeof sortingCallbacks;

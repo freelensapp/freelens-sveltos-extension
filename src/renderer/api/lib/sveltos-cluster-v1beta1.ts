@@ -41,6 +41,9 @@ export class SveltosCluster extends Renderer.K8sApi.LensExtensionKubeObject<
   SveltosClusterStatus,
   SveltosClusterSpec
 > {
+  declare kind: "SveltosCluster";
+  declare apiVersion: "lib.projectsveltos.io/v1beta1";
+
   static readonly kind = "SveltosCluster";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/lib.projectsveltos.io/v1beta1/sveltosclusters";

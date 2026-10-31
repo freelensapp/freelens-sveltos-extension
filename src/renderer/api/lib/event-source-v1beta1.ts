@@ -24,6 +24,9 @@ export class EventSource extends Renderer.K8sApi.LensExtensionKubeObject<
   EventSourceStatus,
   EventSourceSpec
 > {
+  declare kind: "EventSource";
+  declare apiVersion: "lib.projectsveltos.io/v1beta1";
+
   static readonly kind = "EventSource";
   static readonly namespaced = false;
   static readonly apiBase = "/apis/lib.projectsveltos.io/v1beta1/eventsources";

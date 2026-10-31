@@ -1,9 +1,7 @@
 import { Renderer } from "@freelensapp/extensions";
 import * as MobxReact from "mobx-react";
 import { EventSource, type EventSourceApi } from "../api/lib/event-source-v1beta1";
-import { withErrorPage } from "../components/error-page";
 import styles from "./sveltos-page.module.scss";
-import stylesInline from "./sveltos-page.module.scss?inline";
 
 const { observer } = MobxReact;
 
@@ -33,30 +31,27 @@ export interface EventSourcesPageProps {
   extension: Renderer.LensExtension;
 }
 
-export const EventSourcesPage = observer((props: EventSourcesPageProps) =>
-  withErrorPage(props, () => {
-    const store = KubeObject.getStore<KubeObject>();
+export const EventSourcesPage = observer((props: EventSourcesPageProps) => {
+  const store = KubeObject.getStore<KubeObject>();
 
-    return (
-      <>
-        <style>{stylesInline}</style>
-        <KubeObjectListLayout<KubeObject, KubeObjectApi>
-          tableId={`${KubeObject.crd.plural}Table`}
-          isConfigurable
-          className={styles.page}
-          store={store}
-          sortingCallbacks={sortingCallbacks}
-          searchFilters={[(object: KubeObject) => object.getSearchFields()]}
-          renderHeaderTitle={KubeObject.crd.title}
-          renderTableHeader={renderTableHeader}
-          renderTableContents={(object: KubeObject) => [
-            <WithTooltip>{object.getName()}</WithTooltip>,
-            <WithTooltip>{KubeObject.getWatchedKinds(object).join(", ") || "N/A"}</WithTooltip>,
-            <BadgeBoolean value={KubeObject.getCollectResources(object)} />,
-            <KubeObjectAge object={object} key="age" />,
-          ]}
-        />
-      </>
-    );
-  }),
-);
+  return (
+    <>
+      <KubeObjectListLayout<KubeObject, KubeObjectApi>
+        tableId={`${KubeObject.crd.plural}Table`}
+        isConfigurable
+        className={styles.page}
+        store={store}
+        sortingCallbacks={sortingCallbacks}
+        searchFilters={[(object: KubeObject) => object.getSearchFields()]}
+        renderHeaderTitle={KubeObject.crd.title}
+        renderTableHeader={renderTableHeader}
+        renderTableContents={(object: KubeObject) => [
+          <WithTooltip>{object.getName()}</WithTooltip>,
+          <WithTooltip>{KubeObject.getWatchedKinds(object).join(", ") || "N/A"}</WithTooltip>,
+          <BadgeBoolean value={KubeObject.getCollectResources(object)} />,
+          <KubeObjectAge object={object} key="age" />,
+        ]}
+      />
+    </>
+  );
+});

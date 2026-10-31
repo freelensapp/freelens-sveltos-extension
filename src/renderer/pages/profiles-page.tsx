@@ -2,11 +2,9 @@ import { Renderer } from "@freelensapp/extensions";
 import * as MobxReact from "mobx-react";
 import { Profile, type ProfileApi } from "../api/config/profile-v1beta1";
 import { selectorToString } from "../api/types";
-import { withErrorPage } from "../components/error-page";
 import { DependsOnSummary } from "../components/profile-dependencies";
 import { TierBadge } from "../components/tier-badge";
 import styles from "./sveltos-page.module.scss";
-import stylesInline from "./sveltos-page.module.scss?inline";
 
 const { observer } = MobxReact;
 
@@ -43,34 +41,31 @@ export interface ProfilesPageProps {
   extension: Renderer.LensExtension;
 }
 
-export const ProfilesPage = observer((props: ProfilesPageProps) =>
-  withErrorPage(props, () => {
-    const store = KubeObject.getStore<KubeObject>();
+export const ProfilesPage = observer((props: ProfilesPageProps) => {
+  const store = KubeObject.getStore<KubeObject>();
 
-    return (
-      <>
-        <style>{stylesInline}</style>
-        <KubeObjectListLayout<KubeObject, KubeObjectApi>
-          tableId={`${KubeObject.crd.plural}Table`}
-          isConfigurable
-          className={styles.page}
-          store={store}
-          sortingCallbacks={sortingCallbacks}
-          searchFilters={[(object: KubeObject) => object.getSearchFields()]}
-          renderHeaderTitle={KubeObject.crd.title}
-          renderTableHeader={renderTableHeader}
-          renderTableContents={(object: KubeObject) => [
-            <WithTooltip>{object.getName()}</WithTooltip>,
-            <LinkToNamespace namespace={object.getNs()} />,
-            <WithTooltip>{object.spec?.syncMode ?? "Continuous"}</WithTooltip>,
-            <TierBadge tier={object.spec?.tier} />,
-            <DependsOnSummary names={object.spec?.dependsOn} />,
-            <WithTooltip>{selectorToString(object.spec?.clusterSelector) ?? "N/A"}</WithTooltip>,
-            <WithTooltip>{(object.status?.matchingClusters ?? []).length}</WithTooltip>,
-            <KubeObjectAge object={object} key="age" />,
-          ]}
-        />
-      </>
-    );
-  }),
-);
+  return (
+    <>
+      <KubeObjectListLayout<KubeObject, KubeObjectApi>
+        tableId={`${KubeObject.crd.plural}Table`}
+        isConfigurable
+        className={styles.page}
+        store={store}
+        sortingCallbacks={sortingCallbacks}
+        searchFilters={[(object: KubeObject) => object.getSearchFields()]}
+        renderHeaderTitle={KubeObject.crd.title}
+        renderTableHeader={renderTableHeader}
+        renderTableContents={(object: KubeObject) => [
+          <WithTooltip>{object.getName()}</WithTooltip>,
+          <LinkToNamespace namespace={object.getNs()} />,
+          <WithTooltip>{object.spec?.syncMode ?? "Continuous"}</WithTooltip>,
+          <TierBadge tier={object.spec?.tier} />,
+          <DependsOnSummary names={object.spec?.dependsOn} />,
+          <WithTooltip>{selectorToString(object.spec?.clusterSelector) ?? "N/A"}</WithTooltip>,
+          <WithTooltip>{(object.status?.matchingClusters ?? []).length}</WithTooltip>,
+          <KubeObjectAge object={object} key="age" />,
+        ]}
+      />
+    </>
+  );
+});

@@ -7,6 +7,9 @@ export class Profile extends Renderer.K8sApi.LensExtensionKubeObject<
   ProfileStatus,
   ProfileSpec
 > {
+  declare kind: "Profile";
+  declare apiVersion: "config.projectsveltos.io/v1beta1";
+
   static readonly kind = "Profile";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/config.projectsveltos.io/v1beta1/profiles";

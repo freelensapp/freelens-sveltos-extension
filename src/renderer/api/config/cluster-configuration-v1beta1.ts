@@ -59,6 +59,9 @@ export class ClusterConfiguration extends Renderer.K8sApi.LensExtensionKubeObjec
   ClusterConfigurationStatus,
   void
 > {
+  declare kind: "ClusterConfiguration";
+  declare apiVersion: "config.projectsveltos.io/v1beta1";
+
   static readonly kind = "ClusterConfiguration";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/config.projectsveltos.io/v1beta1/clusterconfigurations";

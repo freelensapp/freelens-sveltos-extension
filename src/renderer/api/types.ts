@@ -150,8 +150,9 @@ export type FeatureStatus =
   | "Removed"
   | "Blocked";
 
+/** An entry of `status.clusterInfo`, whose reference Sveltos names `cluster`. */
 export interface ClusterInfo {
-  clusterRef: ObjectReference;
+  cluster: ObjectReference;
   hash?: string;
   status?: FeatureStatus;
   failureMessage?: string;

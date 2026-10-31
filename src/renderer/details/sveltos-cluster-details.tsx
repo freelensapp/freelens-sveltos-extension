@@ -4,7 +4,6 @@ import React from "react";
 import { SveltosCluster } from "../api/lib/sveltos-cluster-v1beta1";
 import { useMetadataFilter } from "../api/metadata-filter";
 import styles from "../components/dashboard.module.scss";
-import { withErrorPage } from "../components/error-page";
 
 const { observer } = MobxReact;
 
@@ -12,57 +11,51 @@ const {
   Component: { BadgeBoolean, Button, DrawerItem, DrawerTitle },
 } = Renderer;
 
-export interface SveltosClusterDetailsProps extends Renderer.Component.KubeObjectDetailsProps<SveltosCluster> {
-  extension: Renderer.LensExtension;
-}
+export interface SveltosClusterDetailsProps extends Renderer.Component.KubeObjectDetailsProps<SveltosCluster> {}
 
-export const SveltosClusterDetails = observer((props: SveltosClusterDetailsProps) =>
-  withErrorPage(props, () => {
-    const { object } = props;
+export const SveltosClusterDetails = observer((props: SveltosClusterDetailsProps) => {
+  const { object } = props;
 
-    return (
-      <>
-        <DrawerTitle>Status</DrawerTitle>
-        <DrawerItem name="Ready">
-          <BadgeBoolean value={object.status?.ready ?? false} />
-        </DrawerItem>
-        <DrawerItem name="Connection Status">{object.status?.connectionStatus ?? "N/A"}</DrawerItem>
-        <DrawerItem name="Kubernetes Version">{object.status?.version ?? "N/A"}</DrawerItem>
-        <DrawerItem name="Connection Failures">{object.status?.connectionFailures ?? 0}</DrawerItem>
-        <DrawerItem name="Failure Message" hidden={!object.status?.failureMessage}>
-          {object.status?.failureMessage}
-        </DrawerItem>
-        <DrawerItem name="Agent Last Report" hidden={!object.status?.agentLastReportTime}>
-          {object.status?.agentLastReportTime}
-        </DrawerItem>
+  return (
+    <>
+      <DrawerTitle>Status</DrawerTitle>
+      <DrawerItem name="Ready">
+        <BadgeBoolean value={object.status?.ready ?? false} />
+      </DrawerItem>
+      <DrawerItem name="Connection Status">{object.status?.connectionStatus ?? "N/A"}</DrawerItem>
+      <DrawerItem name="Kubernetes Version">{object.status?.version ?? "N/A"}</DrawerItem>
+      <DrawerItem name="Connection Failures">{object.status?.connectionFailures ?? 0}</DrawerItem>
+      <DrawerItem name="Failure Message" hidden={!object.status?.failureMessage}>
+        {object.status?.failureMessage}
+      </DrawerItem>
+      <DrawerItem name="Agent Last Report" hidden={!object.status?.agentLastReportTime}>
+        {object.status?.agentLastReportTime}
+      </DrawerItem>
 
-        <DrawerTitle>Configuration</DrawerTitle>
-        <DrawerItem name="Paused">
-          <BadgeBoolean value={object.spec?.paused ?? false} />
-        </DrawerItem>
-        <DrawerItem name="Pull Mode">
-          <BadgeBoolean value={object.spec?.pullMode ?? false} />
-        </DrawerItem>
-        <DrawerItem name="Kubeconfig Secret" hidden={!object.spec?.kubeconfigName}>
-          {object.spec?.kubeconfigName}
-        </DrawerItem>
-        <DrawerItem name="Active Window" hidden={!object.spec?.activeWindow}>
-          {object.spec?.activeWindow
-            ? `from "${object.spec.activeWindow.from}" to "${object.spec.activeWindow.to}"`
-            : ""}
-        </DrawerItem>
-        <DrawerItem name="Next Pause" hidden={!object.status?.nextPause}>
-          {object.status?.nextPause}
-        </DrawerItem>
-        <DrawerItem name="Next Unpause" hidden={!object.status?.nextUnpause}>
-          {object.status?.nextUnpause}
-        </DrawerItem>
+      <DrawerTitle>Configuration</DrawerTitle>
+      <DrawerItem name="Paused">
+        <BadgeBoolean value={object.spec?.paused ?? false} />
+      </DrawerItem>
+      <DrawerItem name="Pull Mode">
+        <BadgeBoolean value={object.spec?.pullMode ?? false} />
+      </DrawerItem>
+      <DrawerItem name="Kubeconfig Secret" hidden={!object.spec?.kubeconfigName}>
+        {object.spec?.kubeconfigName}
+      </DrawerItem>
+      <DrawerItem name="Active Window" hidden={!object.spec?.activeWindow}>
+        {object.spec?.activeWindow ? `from "${object.spec.activeWindow.from}" to "${object.spec.activeWindow.to}"` : ""}
+      </DrawerItem>
+      <DrawerItem name="Next Pause" hidden={!object.status?.nextPause}>
+        {object.status?.nextPause}
+      </DrawerItem>
+      <DrawerItem name="Next Unpause" hidden={!object.status?.nextUnpause}>
+        {object.status?.nextUnpause}
+      </DrawerItem>
 
-        <MetadataEditor object={object} />
-      </>
-    );
-  }),
-);
+      <MetadataEditor object={object} />
+    </>
+  );
+});
 
 function MetadataEditor({ object }: { object: SveltosCluster }) {
   const [labels, setLabels] = React.useState<MetadataRow[]>(() => toRows(object.metadata.labels));

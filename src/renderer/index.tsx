@@ -21,11 +21,16 @@ import { Profile } from "./api/config/profile-v1beta1";
 import { setHelmReleaseFetcher } from "./api/helm-release";
 import { Classifier } from "./api/lib/classifier-v1beta1";
 import { EventSource } from "./api/lib/event-source-v1beta1";
+import { EventTrigger } from "./api/lib/event-trigger-v1beta1";
 import { SveltosCluster } from "./api/lib/sveltos-cluster-v1beta1";
 import { setMetadataFilterFetcher } from "./api/metadata-filter";
 import { setUiSettingsFetcher } from "./api/ui-settings";
-import { EventTrigger } from "./api/utils/event-trigger-v1beta1";
 import { createAvailableVersionPage } from "./components/available-version";
+import {
+  withDetailsErrorBoundary,
+  withMenuItemErrorBoundary,
+  withPageErrorBoundary,
+} from "./components/error-boundary";
 import { ClassifierDetails } from "./details/classifier-details";
 import { ClusterConfigurationDetails } from "./details/cluster-configuration-details";
 import { ClusterReportDetails } from "./details/cluster-report-details";
@@ -45,10 +50,7 @@ import {
   ProfilesIcon,
   SveltosIcon,
 } from "./icons";
-import {
-  SveltosClusterPauseMenuItem,
-  type SveltosClusterPauseMenuItemProps,
-} from "./menus/sveltos-cluster-pause-menu-item";
+import { SveltosClusterPauseMenuItem } from "./menus/sveltos-cluster-pause-menu-item";
 import { ClassifiersPage } from "./pages/classifiers-page";
 import { ClusterProfilesPage } from "./pages/cluster-profiles-page";
 import { ClusterReportsPage } from "./pages/cluster-reports-page";
@@ -60,10 +62,43 @@ import { ProfileDependenciesPage } from "./pages/profile-dependencies-page";
 import { ProfilesPage } from "./pages/profiles-page";
 import { SveltosClustersPage } from "./pages/sveltos-clusters-page";
 import { MetadataFilterPreferenceHint, MetadataFilterPreferenceInput } from "./preferences/metadata-filter-preference";
-import { InsecureTlsPreferenceHint, InsecureTlsPreferenceInput } from "./preferences/tls-preference";
+
+// Each page is created once: the host passes a cluster page only `params`, so the registration renders it with the
+// extension.
+const SveltosClustersVersionPage = createAvailableVersionPage("Sveltos Clusters", [
+  { kubeObjectClass: SveltosCluster, PageComponent: SveltosClustersPage, version: "v1beta1" },
+]);
+const ClusterProfilesVersionPage = createAvailableVersionPage("Cluster Profiles", [
+  { kubeObjectClass: ClusterProfile, PageComponent: ClusterProfilesPage, version: "v1beta1" },
+]);
+const ProfilesVersionPage = createAvailableVersionPage("Profiles", [
+  { kubeObjectClass: Profile, PageComponent: ProfilesPage, version: "v1beta1" },
+]);
+const DependenciesVersionPage = createAvailableVersionPage("Dependencies", [
+  { kubeObjectClass: ClusterProfile, PageComponent: ProfileDependenciesPage, version: "v1beta1" },
+]);
+const AddonsVersionPage = createAvailableVersionPage("Add-ons", [
+  { kubeObjectClass: ClusterSummary, PageComponent: ClusterSummariesPage, version: "v1beta1" },
+]);
+const DryRunVersionPage = createAvailableVersionPage("Dry Run", [
+  { kubeObjectClass: ClusterReport, PageComponent: ClusterReportsPage, version: "v1beta1" },
+]);
+const EventSourcesVersionPage = createAvailableVersionPage("Event Sources", [
+  { kubeObjectClass: EventSource, PageComponent: EventSourcesPage, version: "v1beta1" },
+]);
+const EventTriggersVersionPage = createAvailableVersionPage("Event Triggers", [
+  { kubeObjectClass: EventTrigger, PageComponent: EventTriggersPage, version: "v1beta1" },
+]);
+const ClassifiersVersionPage = createAvailableVersionPage("Classifiers", [
+  { kubeObjectClass: Classifier, PageComponent: ClassifiersPage, version: "v1beta1" },
+]);
 
 class SveltosIpcRenderer extends Renderer.Ipc {}
 
+// Every page, details panel and menu item renders inside an error boundary, so that an error it throws stays in its
+// place: the host has none around the details drawer or a menu item, and its boundary around the cluster frame would
+// replace the whole cluster view. Each registration field is mapped through its wrapper, so an entry added to it is
+// wrapped too.
 export default class SveltosRenderer extends Renderer.LensExtension {
   async onActivate() {
     SveltosPreferencesStore.getInstanceOrCreate<SveltosPreferencesStore>().loadExtension(this);
@@ -80,13 +115,6 @@ export default class SveltosRenderer extends Renderer.LensExtension {
 
   appPreferences = [
     {
-      title: "Sveltos",
-      components: {
-        Input: () => <InsecureTlsPreferenceInput />,
-        Hint: () => <InsecureTlsPreferenceHint />,
-      },
-    },
-    {
       title: "Sveltos metadata filter",
       components: {
         Input: () => <MetadataFilterPreferenceInput />,
@@ -99,100 +127,19 @@ export default class SveltosRenderer extends Renderer.LensExtension {
   private getLatestRelease = async (force = false): Promise<string | undefined> =>
     SveltosIpcRenderer.getInstance().invoke(latestReleaseChannel, { force });
 
-  kubeObjectDetailItems = [
-    {
-      kind: SveltosCluster.kind,
-      apiVersions: SveltosCluster.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <SveltosClusterDetails {...props} extension={this} />
-        ),
-      },
-    },
-    {
-      kind: ClusterProfile.kind,
-      apiVersions: ClusterProfile.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <ProfileDetails {...props} extension={this} />
-        ),
-      },
-    },
-    {
-      kind: Profile.kind,
-      apiVersions: Profile.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <ProfileDetails {...props} extension={this} />
-        ),
-      },
-    },
-    {
-      kind: ClusterSummary.kind,
-      apiVersions: ClusterSummary.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <ClusterSummaryDetails {...props} extension={this} />
-        ),
-      },
-    },
-    {
-      kind: ClusterReport.kind,
-      apiVersions: ClusterReport.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <ClusterReportDetails {...props} extension={this} />
-        ),
-      },
-    },
-    {
-      kind: ClusterConfiguration.kind,
-      apiVersions: ClusterConfiguration.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <ClusterConfigurationDetails {...props} extension={this} />
-        ),
-      },
-    },
-    {
-      kind: EventSource.kind,
-      apiVersions: EventSource.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <EventSourceDetails {...props} extension={this} />
-        ),
-      },
-    },
-    {
-      kind: EventTrigger.kind,
-      apiVersions: EventTrigger.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <EventTriggerDetails {...props} extension={this} />
-        ),
-      },
-    },
-    {
-      kind: Classifier.kind,
-      apiVersions: Classifier.crd.apiVersions,
-      priority: 10,
-      components: {
-        Details: (props: Renderer.Component.KubeObjectDetailsProps<any>) => (
-          <ClassifierDetails {...props} extension={this} />
-        ),
-      },
-    },
-  ];
+  kubeObjectDetailItems: Renderer.LensExtension["kubeObjectDetailItems"] = [
+    Renderer.K8sApi.detailsFor(SveltosCluster, { priority: 10, Details: SveltosClusterDetails }),
+    Renderer.K8sApi.detailsFor(ClusterProfile, { priority: 10, Details: ProfileDetails }),
+    Renderer.K8sApi.detailsFor(Profile, { priority: 10, Details: ProfileDetails }),
+    Renderer.K8sApi.detailsFor(ClusterSummary, { priority: 10, Details: ClusterSummaryDetails }),
+    Renderer.K8sApi.detailsFor(ClusterReport, { priority: 10, Details: ClusterReportDetails }),
+    Renderer.K8sApi.detailsFor(ClusterConfiguration, { priority: 10, Details: ClusterConfigurationDetails }),
+    Renderer.K8sApi.detailsFor(EventSource, { priority: 10, Details: EventSourceDetails }),
+    Renderer.K8sApi.detailsFor(EventTrigger, { priority: 10, Details: EventTriggerDetails }),
+    Renderer.K8sApi.detailsFor(Classifier, { priority: 10, Details: ClassifierDetails }),
+  ].map((registration) => withDetailsErrorBoundary(this, registration));
 
-  clusterPages = [
+  clusterPages: Renderer.LensExtension["clusterPages"] = [
     {
       id: "sveltos-overview",
       components: {
@@ -202,76 +149,58 @@ export default class SveltosRenderer extends Renderer.LensExtension {
     {
       id: "sveltos-clusters",
       components: {
-        Page: createAvailableVersionPage("Sveltos Clusters", [
-          { kubeObjectClass: SveltosCluster, PageComponent: SveltosClustersPage, version: "v1beta1" },
-        ]),
+        Page: () => <SveltosClustersVersionPage extension={this} />,
       },
     },
     {
       id: "sveltos-cluster-profiles",
       components: {
-        Page: createAvailableVersionPage("Cluster Profiles", [
-          { kubeObjectClass: ClusterProfile, PageComponent: ClusterProfilesPage, version: "v1beta1" },
-        ]),
+        Page: () => <ClusterProfilesVersionPage extension={this} />,
       },
     },
     {
       id: "sveltos-profiles",
       components: {
-        Page: createAvailableVersionPage("Profiles", [
-          { kubeObjectClass: Profile, PageComponent: ProfilesPage, version: "v1beta1" },
-        ]),
+        Page: () => <ProfilesVersionPage extension={this} />,
       },
     },
     {
       id: "sveltos-dependencies",
       components: {
-        Page: createAvailableVersionPage("Dependencies", [
-          { kubeObjectClass: ClusterProfile, PageComponent: ProfileDependenciesPage, version: "v1beta1" },
-        ]),
+        Page: () => <DependenciesVersionPage extension={this} />,
       },
     },
     {
       id: "sveltos-addons",
       components: {
-        Page: createAvailableVersionPage("Add-ons", [
-          { kubeObjectClass: ClusterSummary, PageComponent: ClusterSummariesPage, version: "v1beta1" },
-        ]),
+        Page: () => <AddonsVersionPage extension={this} />,
       },
     },
     {
       id: "sveltos-dry-run",
       components: {
-        Page: createAvailableVersionPage("Dry Run", [
-          { kubeObjectClass: ClusterReport, PageComponent: ClusterReportsPage, version: "v1beta1" },
-        ]),
+        Page: () => <DryRunVersionPage extension={this} />,
       },
     },
     {
       id: "sveltos-event-sources",
       components: {
-        Page: createAvailableVersionPage("Event Sources", [
-          { kubeObjectClass: EventSource, PageComponent: EventSourcesPage, version: "v1beta1" },
-        ]),
+        Page: () => <EventSourcesVersionPage extension={this} />,
       },
     },
     {
       id: "sveltos-event-triggers",
       components: {
-        Page: createAvailableVersionPage("Event Triggers", [
-          { kubeObjectClass: EventTrigger, PageComponent: EventTriggersPage, version: "v1beta1" },
-        ]),
+        Page: () => <EventTriggersVersionPage extension={this} />,
       },
     },
     {
       id: "sveltos-classifiers",
       components: {
-        Page: createAvailableVersionPage("Classifiers", [
-          { kubeObjectClass: Classifier, PageComponent: ClassifiersPage, version: "v1beta1" },
-        ]),
+        Page: () => <ClassifiersVersionPage extension={this} />,
       },
     },
-  ];
+  ].map((registration) => withPageErrorBoundary(this, registration));
 
   clusterPageMenus = [
     {
@@ -373,15 +302,21 @@ export default class SveltosRenderer extends Renderer.LensExtension {
     },
   ];
 
-  kubeObjectMenuItems = [
-    {
-      kind: SveltosCluster.kind,
-      apiVersions: SveltosCluster.crd.apiVersions,
-      components: {
-        MenuItem: (props: SveltosClusterPauseMenuItemProps) => (
-          <SveltosClusterPauseMenuItem {...props} extension={this} />
-        ),
-      },
-    },
+  // The kinds the extension presents in pages of its own, so the Custom Resources tree of the cluster sidebar does not
+  // list them a second time. ClusterConfiguration only gets a details panel, and the ClusterAPI Cluster belongs to
+  // ClusterAPI: both stay in the tree.
+  customResources = [
+    SveltosCluster,
+    ClusterProfile,
+    Profile,
+    ClusterSummary,
+    ClusterReport,
+    EventSource,
+    EventTrigger,
+    Classifier,
   ];
+
+  kubeObjectMenuItems: Renderer.LensExtension["kubeObjectMenuItems"] = [
+    Renderer.K8sApi.menuItemFor(SveltosCluster, { MenuItem: SveltosClusterPauseMenuItem }),
+  ].map((registration) => withMenuItemErrorBoundary(this, registration));
 }

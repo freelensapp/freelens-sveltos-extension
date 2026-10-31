@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { Main } from "@freelensapp/extensions";
+import { describe, expect, it, vi } from "vitest";
 import {
+  fetchLatestSveltosRelease,
   findLatestReleaseRequest,
   isLatestReleaseFresh,
   latestReleaseTtl,
@@ -65,5 +67,26 @@ describe("isLatestReleaseFresh", () => {
 
   it("is never fresh without a previous check", () => {
     expect(isLatestReleaseFresh(undefined, now)).toBe(false);
+  });
+});
+
+describe("fetchLatestSveltosRelease", () => {
+  const respond = (status: number, body: string) =>
+    vi.mocked(Main.Util.fetch).mockResolvedValueOnce(new Response(body, { status }));
+
+  it("reads the feed through the HTTP client of Freelens", async () => {
+    respond(200, feed);
+
+    expect(await fetchLatestSveltosRelease()).toBe("v1.14.0");
+    expect(Main.Util.fetch).toHaveBeenCalledWith(
+      "https://github.com/projectsveltos/sveltos/releases.atom",
+      expect.objectContaining({ headers: expect.objectContaining({ accept: "application/atom+xml" }) }),
+    );
+  });
+
+  it("fails when GitHub does not answer 200", async () => {
+    respond(503, "");
+
+    await expect(fetchLatestSveltosRelease()).rejects.toThrow("GitHub responded with 503");
   });
 });

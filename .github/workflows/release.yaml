@@ -16,9 +16,6 @@ jobs:
     runs-on: ubuntu-24.04-arm
     environment: publishing
 
-    env:
-      VITE_PRESERVE_MODULES: "false"
-
     steps:
       - name: Checkout plugin
         uses: actions/checkout@v7
@@ -27,7 +24,7 @@ jobs:
         run: test "${GITHUB_REF_NAME}" = "v$(yq -r .version package.json)"
 
       - name: Setup node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           package-manager-cache: false
@@ -164,6 +161,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           fail_on_unmatched_files: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
           files: |-
             *.tgz
             *.tgz.sha256

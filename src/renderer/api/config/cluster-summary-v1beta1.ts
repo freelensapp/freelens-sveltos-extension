@@ -52,6 +52,9 @@ export class ClusterSummary extends Renderer.K8sApi.LensExtensionKubeObject<
   ClusterSummaryStatus,
   ClusterSummarySpec
 > {
+  declare kind: "ClusterSummary";
+  declare apiVersion: "config.projectsveltos.io/v1beta1";
+
   static readonly kind = "ClusterSummary";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/config.projectsveltos.io/v1beta1/clustersummaries";

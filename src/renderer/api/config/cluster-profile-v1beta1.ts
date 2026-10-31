@@ -7,6 +7,9 @@ export class ClusterProfile extends Renderer.K8sApi.LensExtensionKubeObject<
   ProfileStatus,
   ProfileSpec
 > {
+  declare kind: "ClusterProfile";
+  declare apiVersion: "config.projectsveltos.io/v1beta1";
+
   static readonly kind = "ClusterProfile";
   static readonly namespaced = false;
   static readonly apiBase = "/apis/config.projectsveltos.io/v1beta1/clusterprofiles";

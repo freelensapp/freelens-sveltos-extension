@@ -14,7 +14,7 @@ let scopeCounter = 0;
 export function useColumnResize() {
   const [scope] = React.useState(() => `sveltos-table-${++scopeCounter}`);
   const [widths, setWidths] = React.useState<Record<string, number>>({});
-  const frame = React.useRef<number>();
+  const frame = React.useRef<number | undefined>(undefined);
 
   React.useEffect(() => () => window.cancelAnimationFrame(frame.current ?? 0), []);
 
