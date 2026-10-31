@@ -3,8 +3,8 @@
 import { Common, type Renderer } from "@freelensapp/extensions";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Example } from "../api/example/example-v1alpha2";
-import { ExamplesPage } from "../pages/examples-page-v1alpha2";
+import { EventTrigger } from "../api/utils/event-trigger-v1beta1";
+import { EventTriggersPage } from "../pages/event-triggers-page";
 import {
   ErrorBoundary,
   withDetailsErrorBoundary,
@@ -127,32 +127,29 @@ describe("the registration wrappers", () => {
   // A `try`/`catch` around the call of the page, as `withErrorPage` was, does not see this error: the host calls
   // `renderTableContents` from the render of its own list layout, a child of the page.
   it("keep an error that a callback of the page throws from the render of the host's list layout inside the page", () => {
-    const object = new Example({
-      apiVersion: "example.freelens.app/v1alpha2",
-      kind: "Example",
-      metadata: { name: "example", namespace: "default", uid: "1", resourceVersion: "1", selfLink: "" },
-      spec: {},
+    const object = new EventTrigger({
+      apiVersion: "lib.projectsveltos.io/v1beta1",
+      kind: "EventTrigger",
+      metadata: { name: "trigger", uid: "1", resourceVersion: "1", selfLink: "" },
+      spec: { eventSourceName: "services" },
     });
-    vi.spyOn(Example, "getStore").mockReturnValue({ items: [object] } as unknown as Renderer.K8sApi.KubeObjectStore<
-      Example,
-      Renderer.K8sApi.KubeApi<Example>
+    vi.spyOn(EventTrigger, "getStore").mockReturnValue({ items: [object] } as unknown as Renderer.K8sApi.KubeObjectStore<
+      EventTrigger,
+      Renderer.K8sApi.KubeApi<EventTrigger>
     >);
-    vi.spyOn(Example, "getSuspended").mockImplementation(() => {
-      throw new Error("no suspended field");
+    vi.spyOn(EventTrigger, "getEventSourceName").mockImplementation(() => {
+      throw new Error("no event source");
     });
     const { Page } = withPageErrorBoundary(extension, {
-      id: "example",
-      components: { Page: () => <ExamplesPage /> },
+      id: "sveltos-event-triggers",
+      components: { Page: () => <EventTriggersPage extension={extension} /> },
     }).components;
 
     render(<Page params={{}} />);
 
-    expect(screen.getByText("Error: no suspended field")).toBeDefined();
+    expect(screen.getByText("Error: no event source")).toBeDefined();
     expect(Common.logger.error).toHaveBeenCalledTimes(1);
-    expect(Common.logger.error).toHaveBeenCalledWith(
-      "[example-extension]: Error: no suspended field",
-      expect.any(String),
-    );
+    expect(Common.logger.error).toHaveBeenCalledWith("[example-extension]: Error: no event source", expect.any(String));
   });
 
   it("keep an error of a details panel inside the panel, and render it again for a new object", () => {
