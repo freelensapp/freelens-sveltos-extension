@@ -34,12 +34,18 @@ export class SveltosPreferencesStore extends Common.Store.ExtensionStore<Sveltos
     this.uiSettings = uiSettings ? normalizeUiSettings(uiSettings) : undefined;
   }
 
+  /**
+   * The host saves each key of the model on its own and rejects an undefined value ("Use `delete()` to clear values"),
+   * which would leave the keys after it unsaved: an unset field is left out.
+   */
   toJSON(): SveltosPreferencesModel {
-    return {
+    const model: SveltosPreferencesModel = {
       metadataFilter: this.metadataFilter,
       latestRelease: this.latestRelease,
       latestReleaseCheckedAt: this.latestReleaseCheckedAt,
       uiSettings: this.uiSettings,
     };
+
+    return Object.fromEntries(Object.entries(model).filter(([, value]) => value !== undefined));
   }
 }
