@@ -1,5 +1,6 @@
-import type { ChartIconResult } from "../common/chart-icons";
 import { httpGet } from "./http";
+
+import type { ChartIconResult } from "../common/chart-icons";
 
 /** `fetch` reports every network problem as "fetch failed", the detail is in `cause`. */
 function describeError(error: unknown): string {

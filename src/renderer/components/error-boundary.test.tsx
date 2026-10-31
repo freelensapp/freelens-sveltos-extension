@@ -133,10 +133,9 @@ describe("the registration wrappers", () => {
       metadata: { name: "trigger", uid: "1", resourceVersion: "1", selfLink: "" },
       spec: { eventSourceName: "services" },
     });
-    vi.spyOn(EventTrigger, "getStore").mockReturnValue({ items: [object] } as unknown as Renderer.K8sApi.KubeObjectStore<
-      EventTrigger,
-      Renderer.K8sApi.KubeApi<EventTrigger>
-    >);
+    vi.spyOn(EventTrigger, "getStore").mockReturnValue({
+      items: [object],
+    } as unknown as Renderer.K8sApi.KubeObjectStore<EventTrigger, Renderer.K8sApi.KubeApi<EventTrigger>>);
     vi.spyOn(EventTrigger, "getEventSourceName").mockImplementation(() => {
       throw new Error("no event source");
     });

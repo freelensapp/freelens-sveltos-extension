@@ -20,18 +20,18 @@ A `Sveltos` group is added to the cluster sidebar with the following pages:
 
 <!-- markdownlint-disable MD013 -->
 
-| Page | Resource | What it shows |
-| --- | --- | --- |
-| Overview | all of the below | Counters for every Sveltos resource, ready clusters and failing add-ons |
+| Page             | Resource                               | What it shows                                                                                                                |
+| ---------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Overview         | all of the below                       | Counters for every Sveltos resource, ready clusters and failing add-ons                                                      |
 | Sveltos Clusters | `SveltosCluster`, ClusterAPI `Cluster` | Readiness, connection status, Kubernetes version, paused state, with a switch between SveltosCluster and ClusterAPI clusters |
-| Cluster Profiles | `ClusterProfile` | Sync mode, tier, dependencies, cluster selector, matching clusters |
-| Profiles | `Profile` | Same as above, namespace scoped |
-| Dependencies | `ClusterProfile`, `Profile` | `dependsOn` graph by deployment stage, profile health, missing profiles and cycles |
-| Add-ons | `ClusterSummary` | Per-cluster deployment status of Helm, Resources and Kustomize features |
-| Dry Run | `ClusterReport` | Helm and resource changes a DryRun profile would apply |
-| Event Sources | `EventSource` | Watched resources and CloudEvent match criteria |
-| Event Triggers | `EventTrigger` | Referenced event source, matching clusters, deployment status |
-| Classifiers | `Classifier` | Classifier labels, version constraints, matching clusters |
+| Cluster Profiles | `ClusterProfile`                       | Sync mode, tier, dependencies, cluster selector, matching clusters                                                           |
+| Profiles         | `Profile`                              | Same as above, namespace scoped                                                                                              |
+| Dependencies     | `ClusterProfile`, `Profile`            | `dependsOn` graph by deployment stage, profile health, missing profiles and cycles                                           |
+| Add-ons          | `ClusterSummary`                       | Per-cluster deployment status of Helm, Resources and Kustomize features                                                      |
+| Dry Run          | `ClusterReport`                        | Helm and resource changes a DryRun profile would apply                                                                       |
+| Event Sources    | `EventSource`                          | Watched resources and CloudEvent match criteria                                                                              |
+| Event Triggers   | `EventTrigger`                         | Referenced event source, matching clusters, deployment status                                                                |
+| Classifiers      | `Classifier`                           | Classifier labels, version constraints, matching clusters                                                                    |
 
 <!-- markdownlint-enable MD013 -->
 
@@ -54,7 +54,7 @@ clusters that carry that label. The add-on search box uses the same syntax on
 Both the clusters and the add-ons also have a status selector next to the
 search box. It lists only the statuses currently present, problems first, each
 with the number of matching rows. The cluster status is the one shown in the
-Status column: *Paused*, *Provisioning*, *Failed*, *Provisioned* or *No add-ons*.
+Status column: _Paused_, _Provisioning_, _Failed_, _Provisioned_ or _No add-ons_.
 
 Selecting a cluster filters the **Add-ons** section below it, which flattens
 every `ClusterSummary` into the Helm releases, Kubernetes resources and
@@ -69,8 +69,8 @@ per-feature failures and Helm release conflicts.
 
 Add-ons that are not deployed yet are reported as soon as Sveltos knows about
 them: a fresh `ClusterSummary` with no feature status, or a chart just added to
-a profile that already deployed others, shows as *Provisioning*, and a profile
-waiting for the profiles in its `dependsOn` shows as *Blocked* with the reason.
+a profile that already deployed others, shows as _Provisioning_, and a profile
+waiting for the profiles in its `dependsOn` shows as _Blocked_ with the reason.
 The cluster row counts all of them as provisioning, so a first installation is
 visible right away.
 
@@ -96,7 +96,7 @@ The two features that need the internet, the release comparison against
 performed by the extension main process and handed to the renderer over IPC. The
 renderer uses the Chromium network stack, which is subject to the Freelens proxy
 settings and to the page CSP, so it cannot perform them itself. Behind a TLS
-intercepting proxy, enable *Allow untrusted certificate authorities* in the
+intercepting proxy, enable _Allow untrusted certificate authorities_ in the
 extension preferences: it applies only to these requests and never to cluster
 communications. Everything else is read from the cluster and works with no
 internet access.
@@ -137,17 +137,17 @@ for more information.
 
 <!-- markdownlint-disable MD013 -->
 
-| API Version | Kind | Scope |
-| --- | --- | --- |
-| config.projectsveltos.io/v1beta1 | `ClusterProfile` | Cluster |
-| config.projectsveltos.io/v1beta1 | `Profile` | Namespaced |
-| config.projectsveltos.io/v1beta1 | `ClusterSummary` | Namespaced |
+| API Version                      | Kind                   | Scope      |
+| -------------------------------- | ---------------------- | ---------- |
+| config.projectsveltos.io/v1beta1 | `ClusterProfile`       | Cluster    |
+| config.projectsveltos.io/v1beta1 | `Profile`              | Namespaced |
+| config.projectsveltos.io/v1beta1 | `ClusterSummary`       | Namespaced |
 | config.projectsveltos.io/v1beta1 | `ClusterConfiguration` | Namespaced |
-| config.projectsveltos.io/v1beta1 | `ClusterReport` | Namespaced |
-| lib.projectsveltos.io/v1beta1 | `SveltosCluster` | Namespaced |
-| lib.projectsveltos.io/v1beta1 | `Classifier` | Cluster |
-| lib.projectsveltos.io/v1beta1 | `EventSource` | Cluster |
-| utils.projectsveltos.io/v1beta1 | `EventTrigger` | Cluster |
+| config.projectsveltos.io/v1beta1 | `ClusterReport`        | Namespaced |
+| lib.projectsveltos.io/v1beta1    | `SveltosCluster`       | Namespaced |
+| lib.projectsveltos.io/v1beta1    | `Classifier`           | Cluster    |
+| lib.projectsveltos.io/v1beta1    | `EventSource`          | Cluster    |
+| utils.projectsveltos.io/v1beta1  | `EventTrigger`         | Cluster    |
 
 <!-- markdownlint-enable MD013 -->
 
