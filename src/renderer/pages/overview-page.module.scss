@@ -1,0 +1,85 @@
+@use "../vars";
+
+.overview {
+  padding: vars.$padding * 2;
+  overflow: auto;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: vars.$margin * 2;
+  margin-top: vars.$margin * 2;
+}
+
+.card {
+  background: var(--contentColor);
+  border: 1px solid var(--borderFaintColor);
+  border-radius: 4px;
+  padding: vars.$padding * 2;
+}
+
+.cardTitle {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cardValue {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.cardHint {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.version {
+  align-items: flex-start;
+  background: var(--contentColor);
+  border: 1px solid var(--borderFaintColor);
+  border-radius: 8px;
+  display: flex;
+  gap: vars.$margin * 1.5;
+  margin-top: vars.$margin * 2;
+  padding: vars.$padding * 2;
+}
+
+.versionOutdated {
+  background: rgb(255 167 38 / 10%);
+  border-color: rgb(255 167 38 / 45%);
+}
+
+.versionIcon {
+  color: var(--colorSuccess, #4caf50);
+  flex: 0 0 auto;
+
+  .versionOutdated & {
+    color: var(--colorWarning, #ffa726);
+  }
+}
+
+.versionBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: vars.$margin * 0.5;
+  min-width: 0;
+}
+
+.versionTitle {
+  align-items: center;
+  display: flex;
+  font-size: 1.1rem;
+  font-weight: 600;
+  gap: vars.$margin;
+}
+
+.versionComponents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: vars.$margin * 0.5;
+}

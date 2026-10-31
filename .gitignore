@@ -6,7 +6,6 @@
 *.out
 *.tgz
 *.tmp
-*.tsbuildinfo
 *~
 ?.*
 
