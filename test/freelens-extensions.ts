@@ -75,6 +75,13 @@ export const Renderer = {
   },
 };
 
+// The HTTP client of Freelens in main, which the tests of src/main/ mock per test.
+export const Main = {
+  Util: {
+    fetch: vi.fn(),
+  },
+};
+
 export const Common = {
   logger: {
     debug: vi.fn(),
