@@ -91,8 +91,8 @@ is installed elsewhere. It also compares that version with the latest published
 release and highlights when an update is available, with a **Check for updates**
 button to run the comparison again.
 
-The two features that need the internet, the release comparison against
-`api.github.com` and downloading the chart logos, are read-only `GET` requests
+The two features that need the internet, the release comparison against the
+releases feed of Sveltos on GitHub and downloading the chart logos, are read-only `GET` requests
 performed by the extension main process with the HTTP client of Freelens and
 handed to the renderer over IPC. They follow the proxy and certificate settings
 of Freelens, so a TLS intercepting proxy needs nothing of the extension.
@@ -119,14 +119,15 @@ A `SveltosCluster` can be paused or resumed from its context menu.
 Pages that require a CRD which is not installed in the current cluster render a
 "not available" message instead of failing.
 
-Visit the wiki page about [creating
-extensions](https://github.com/freelensapp/freelens/wiki/Creating-extensions)
-for more information.
+The [extension documentation](https://github.com/freelensapp/freelens/tree/main/docs/extensions)
+of Freelens and the template
+[freelensapp/freelens-example-extension](https://github.com/freelensapp/freelens-example-extension)
+describe how an extension is built.
 
 ## Requirements
 
+- Freelens >= 2.0.0
 - Kubernetes >= 1.24
-- Freelens >= 1.8.0
 - [Sveltos](https://projectsveltos.io/main/getting_started/install/install/)
   installed in the management cluster
 
@@ -150,24 +151,47 @@ for more information.
 
 ## Install
 
-To install, open Freelens and go to Extensions (`ctrl`+`shift`+`E` or
-`cmd`+`shift`+`E`), then search for and install
-`@freelensapp/sveltos-extension`.
+Open Freelens and go to Extensions (`ctrl`+`shift`+`E` or
+`cmd`+`shift`+`E`). The field at the top takes a package name, the URL of a
+tarball, or the path to a tarball or a directory.
+
+### From the registry
+
+Enter `@freelensapp/sveltos-extension` and press Install.
 
 Alternatively, open the following URL in the browser to install directly:
 
 [freelens://app/extensions/install/%40freelensapp%2Fsveltos-extension](freelens://app/extensions/install/%40freelensapp%2Fsveltos-extension)
 
-## Build from the source
+### From a release tarball
 
-You can build the extension from this repository.
+Each [release](https://github.com/freelensapp/freelens-sveltos-extension/releases)
+has the extension as `freelensapp-sveltos-extension-<version>.tgz`, with its
+checksum in `freelensapp-sveltos-extension-<version>.tgz.sha256`. Use a
+release whose major version matches your Freelens version.
+
+- Enter the URL of the `.tgz` asset and press Install. Freelens downloads the
+  `.tgz.sha256` next to it and checks the tarball against it.
+- Or download both files into one directory and enter the path to the `.tgz`,
+  or drop the `.tgz` on the Freelens window. Freelens checks it against the
+  `.tgz.sha256` next to it.
+
+### From a directory
+
+Build the extension (see below), then enter the path to your checkout, the
+directory with `package.json`, and press Install. Freelens runs the extension
+from that directory, from the files in `dist/`, and lists it as unverified.
+This is how you work on the extension: see
+[Development loop](#development-loop).
+
+## Build from the source
 
 ### Prerequisites
 
 Use [NVM](https://github.com/nvm-sh/nvm),
 [mise-en-place](https://mise.jdx.dev/), or
 [windows-nvm](https://github.com/coreybutler/nvm-windows) to install the
-required Node.js version.
+Node.js version in `.nvmrc`.
 
 From the root of this repository:
 
@@ -177,8 +201,8 @@ nvm install
 mise install
 # or
 winget install CoreyButler.NVMforWindows
-nvm install 24.15.0
-nvm use 24.15.0
+nvm install "$(cat .nvmrc)"
+nvm use "$(cat .nvmrc)"
 ```
 
 Install pnpm:
@@ -194,41 +218,101 @@ winget install pnpm.pnpm
 ### Build extension
 
 ```sh
-pnpm i
+pnpm install
 pnpm build
+```
+
+The extension is built into `dist/`. To pack it into a tarball:
+
+```sh
 pnpm pack
 ```
 
-One script to build and pack the extension for testing:
+One script to bump the prerelease version, build and pack the extension for
+testing:
 
 ```sh
 pnpm pack:dev
 ```
 
-### Install built extension
+The tarball is placed in the current directory. Install it as described in
+[From a release tarball](#from-a-release-tarball).
 
-The tarball will be placed in the current directory. In Freelens, navigate
-to the Extensions page and provide the path to the tarball, or drag and
-drop the `.tgz` file into the Freelens window.
+### Development loop
 
-### Check code statically
+Install the extension from your checkout once, as described in
+[From a directory](#from-a-directory), then run:
 
 ```sh
-pnpm lint:check
+pnpm dev
 ```
 
-or
+It rebuilds the extension whenever a source file changes, and Freelens
+reloads the extension after each rebuild, without a restart and without
+packing. Stop it with `ctrl`+`C`.
+
+Neither `pnpm build` nor `pnpm dev` type-checks; run `pnpm type:check` for
+that. A change to `main` or `renderer` in `package.json` needs Freelens
+restarted once.
+
+To check the extension in Freelens with an AI agent, see "Checking the
+Extension in Freelens Dev" in [AGENTS.md](AGENTS.md).
+
+### Check the code
+
+```sh
+pnpm type:check
+pnpm test:unit
+pnpm lint:check
+pnpm knip:check
+```
+
+and, for the formats that Biome does not cover:
 
 ```sh
 pnpm trunk:check
 ```
 
-and
+### Integration tests
+
+The integration tests drive Freelens dev, started from a
+[freelensapp/freelens](https://github.com/freelensapp/freelens) checkout,
+against a [kind](https://kind.sigs.k8s.io/) cluster. In the Freelens checkout:
+
+```sh
+pnpm dev
+```
+
+Freelens dev lists no cluster until a kubeconfig is added in Preferences >
+Kubernetes > Kubeconfig Syncs. Add one with the kind cluster, for example:
+
+```sh
+kubectl config view --minify --flatten --context kind-kind > ~/kind-kind.kubeconfig
+```
+
+Then, with the kind cluster running, in the extension repository:
 
 ```sh
 pnpm build
-pnpm knip:check
+pnpm test:integration
 ```
+
+The tests install the checkout in place, replacing any other installation of
+the extension in Freelens dev, then open every page of the extension, the
+overview first. With [Sveltos](https://projectsveltos.io/main/getting_started/install/install/)
+installed in the kind cluster the pages list its objects; without it they show
+their "not available" state, which the tests accept too. The tests change
+nothing in the cluster. Without Freelens dev or the cluster they are skipped.
+
+Optional variables:
+
+- `TEST_KIND_CLUSTER_NAME`: the kind cluster, `kind` by default, used
+  through the context `kind-<name>`.
+- `FREELENS_CDP_URL`: the CDP endpoint of Freelens dev,
+  `http://127.0.0.1:9223` by default.
+- `FREELENS_MAIN_LOG`: a log of the main process to check for errors, such
+  as its `lens.log`. Without it only the renderer's errors are checked.
+- `TEST_SCREENSHOT_DIR`: a directory for a screenshot of every page.
 
 ### Testing the extension with unpublished Freelens
 
@@ -253,6 +337,14 @@ done
 pnpm clean:node_modules
 pnpm build
 ```
+
+## Credits
+
+The first version of this extension was written by
+[Roberto Bandini](https://github.com/robertobandini). The dashboard it has
+today, which replicates the official Sveltos dashboard, is the work of
+[Alberto](https://github.com/albyrex), contributed in
+[freelensapp/freelens-sveltos-extension#30](https://github.com/freelensapp/freelens-sveltos-extension/pull/30).
 
 ## License
 
