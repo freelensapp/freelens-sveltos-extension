@@ -21,7 +21,7 @@ async function getLatestRelease(force: boolean): Promise<string | undefined> {
 
   if (!force && isLatestReleaseFresh(store.latestReleaseCheckedAt)) return store.latestRelease;
 
-  const tag = await fetchLatestSveltosRelease(store.insecureTls);
+  const tag = await fetchLatestSveltosRelease();
 
   store.latestRelease = tag;
   store.latestReleaseCheckedAt = Date.now();
@@ -54,7 +54,7 @@ class SveltosIpcMain extends Main.Ipc {
         return undefined;
       }
 
-      return fetchChartIcon(request.iconUrl, preferences().insecureTls);
+      return fetchChartIcon(request.iconUrl);
     });
     // Helm keeps releases in the managed cluster, which only main can reach with the Sveltos kubeconfig.
     this.handle(helmReleaseChannel, (...args: unknown[]) => {

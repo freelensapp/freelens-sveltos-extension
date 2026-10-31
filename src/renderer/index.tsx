@@ -62,7 +62,6 @@ import { ProfileDependenciesPage } from "./pages/profile-dependencies-page";
 import { ProfilesPage } from "./pages/profiles-page";
 import { SveltosClustersPage } from "./pages/sveltos-clusters-page";
 import { MetadataFilterPreferenceHint, MetadataFilterPreferenceInput } from "./preferences/metadata-filter-preference";
-import { InsecureTlsPreferenceHint, InsecureTlsPreferenceInput } from "./preferences/tls-preference";
 
 // Each page is created once: the host passes a cluster page only `params`, so the registration renders it with the
 // extension.
@@ -115,13 +114,6 @@ export default class SveltosRenderer extends Renderer.LensExtension {
   }
 
   appPreferences = [
-    {
-      title: "Sveltos",
-      components: {
-        Input: () => <InsecureTlsPreferenceInput />,
-        Hint: () => <InsecureTlsPreferenceHint />,
-      },
-    },
     {
       title: "Sveltos metadata filter",
       components: {

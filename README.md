@@ -93,13 +93,10 @@ button to run the comparison again.
 
 The two features that need the internet, the release comparison against
 `api.github.com` and downloading the chart logos, are read-only `GET` requests
-performed by the extension main process and handed to the renderer over IPC. The
-renderer uses the Chromium network stack, which is subject to the Freelens proxy
-settings and to the page CSP, so it cannot perform them itself. Behind a TLS
-intercepting proxy, enable _Allow untrusted certificate authorities_ in the
-extension preferences: it applies only to these requests and never to cluster
-communications. Everything else is read from the cluster and works with no
-internet access.
+performed by the extension main process with the HTTP client of Freelens and
+handed to the renderer over IPC. They follow the proxy and certificate settings
+of Freelens, so a TLS intercepting proxy needs nothing of the extension.
+Everything else is read from the cluster and works with no internet access.
 
 Both are cached to keep the traffic negligible. A chart logo is downloaded once
 per URL and kept in the main process, so the same logo shared by many clusters

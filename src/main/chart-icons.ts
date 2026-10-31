@@ -13,16 +13,15 @@ const cache = new Map<string, ChartIconResult>();
 
 /**
  * Inlines the chart logo Sveltos reports in ClusterConfiguration as a data URL.
- * Runs in the main process because the renderer network stack is subject to the
- * Freelens proxy settings and the page CSP.
+ * Runs in the main process, out of reach of the page CSP of the renderer.
  */
-export async function fetchChartIcon(iconUrl: string, insecureTls = false): Promise<ChartIconResult> {
+export async function fetchChartIcon(iconUrl: string): Promise<ChartIconResult> {
   const cached = cache.get(iconUrl);
 
   if (cached) return cached;
 
   try {
-    const image = await httpGet(iconUrl, { insecureTls });
+    const image = await httpGet(iconUrl);
     const result: ChartIconResult =
       image.status === 200
         ? { icon: `data:${image.contentType || "image/png"};base64,${image.body.toString("base64")}` }
