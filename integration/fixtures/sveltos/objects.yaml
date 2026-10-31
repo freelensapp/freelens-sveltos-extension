@@ -1,0 +1,107 @@
+# The test objects of the Sveltos pages session: one object of every kind that
+# a page of the extension lists. The Sveltos controllers do not run, so the
+# objects have no status. The namespaced ones are in the namespace that the
+# session selects.
+apiVersion: lib.projectsveltos.io/v1beta1
+kind: SveltosCluster
+metadata:
+  name: test
+  namespace: integration-tests
+  labels:
+    env: integration-tests
+spec:
+  kubeconfigName: test-sveltos-kubeconfig
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: test
+spec:
+  clusterSelector:
+    matchLabels:
+      env: integration-tests
+  helmCharts:
+  - repositoryURL: https://stefanprodan.github.io/podinfo
+    repositoryName: podinfo
+    chartName: podinfo/podinfo
+    chartVersion: 6.17.0
+    releaseName: podinfo
+    releaseNamespace: podinfo
+    helmChartAction: Install
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: test-dependent
+spec:
+  dependsOn:
+  - test
+  clusterSelector:
+    matchLabels:
+      env: integration-tests
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: Profile
+metadata:
+  name: test
+  namespace: integration-tests
+spec:
+  clusterSelector:
+    matchLabels:
+      env: integration-tests
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterSummary
+metadata:
+  name: test
+  namespace: integration-tests
+spec:
+  clusterName: test
+  clusterNamespace: integration-tests
+  clusterType: Sveltos
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterReport
+metadata:
+  name: test
+  namespace: integration-tests
+spec:
+  clusterName: test
+  clusterNamespace: integration-tests
+---
+apiVersion: lib.projectsveltos.io/v1beta1
+kind: EventSource
+metadata:
+  name: test
+spec:
+  resourceSelectors:
+  - group: ""
+    version: v1
+    kind: Service
+---
+apiVersion: lib.projectsveltos.io/v1beta1
+kind: EventTrigger
+metadata:
+  name: test
+spec:
+  eventSourceName: test
+  sourceClusterSelector:
+    matchLabels:
+      env: integration-tests
+---
+apiVersion: lib.projectsveltos.io/v1beta1
+kind: Classifier
+metadata:
+  name: test
+spec:
+  classifierLabels:
+  - key: integration-tests
+    value: "true"
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: test
+  namespace: integration-tests
+spec:
+  paused: true

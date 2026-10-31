@@ -261,6 +261,26 @@ jobs:
           node_image: kindest/node:v${{ env.kubernetes_version }}
           wait: 5m
 
+      # The Sveltos pages session needs the CRDs of the kinds the pages list,
+      # not the Sveltos controllers: the CRDs of the Sveltos chart and the
+      # ClusterAPI Cluster, with one object of every kind from
+      # integration/fixtures/sveltos.
+      - name: Apply the Sveltos CRDs and the test objects
+        run: |
+          helm repo add projectsveltos https://projectsveltos.github.io/helm-charts
+          helm template projectsveltos projectsveltos/projectsveltos --version "${sveltos_chart_version}" --include-crds |
+            yq 'select(.kind == "CustomResourceDefinition")' |
+            kubectl --context kind-freelens apply --server-side -f -
+          kubectl --context kind-freelens apply --server-side \
+            -f "https://raw.githubusercontent.com/kubernetes-sigs/cluster-api/${cluster_api_version}/config/crd/bases/cluster.x-k8s.io_clusters.yaml"
+          kubectl --context kind-freelens wait --for condition=Established --timeout=120s crd --all
+          kubectl --context kind-freelens apply -f integration/fixtures/sveltos
+        env:
+          sveltos_chart_version: 1.16.1
+          # The last ClusterAPI release whose Cluster CRD serves v1beta1, the
+          # version the extension reads.
+          cluster_api_version: v1.10.10
+
       # FREELENS_INTEGRATION_TESTING_DIR gives Freelens dev a fresh profile; the
       # app accepts it only under the system's temporary directory. A dev
       # profile syncs no kubeconfig by default, so the profile is seeded with
@@ -305,10 +325,10 @@ jobs:
           node-version-file: .nvmrc
           package-manager-cache: false
 
-      # The tests run three sessions against the one app: the install test and
-      # one session per API version of the Example CRD, each of which applies
-      # the manifests of its version to the kind cluster named by
-      # TEST_KIND_CLUSTER_NAME, and removes them again.
+      # The tests run two sessions against the one app: the install test and
+      # the Sveltos pages session, which opens every page of the extension in
+      # the kind cluster named by TEST_KIND_CLUSTER_NAME and changes nothing in
+      # it.
       #
       # The tests are deterministic, so a failure is not retried. A failing view
       # costs one view timeout.
