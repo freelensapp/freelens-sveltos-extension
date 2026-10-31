@@ -102,7 +102,12 @@ function authorization(connection: ClusterConnection): string | undefined {
   return undefined;
 }
 
-/** Credentials must never follow redirects, so unlike `httpGet` this does not handle them. */
+/**
+ * A GET to the API server of a managed cluster with the credentials of its Sveltos kubeconfig. The cluster is not
+ * in the Freelens catalog, so `Main.K8sApi.forCluster` does not reach it, and `Main.Util.fetch` takes no client
+ * certificate, CA or TLS options: the Node client is kept for this one case. Credentials must never follow
+ * redirects, so this does not handle them.
+ */
 function kubeGet(connection: ClusterConnection, path: string): Promise<unknown> {
   return new Promise((resolve, reject) => {
     const url = `${connection.server}${path}`;
