@@ -49,8 +49,8 @@ export const EventTriggerDetails = observer((props: EventTriggerDetailsProps) =>
           <DrawerTitle size="sub-title">Deployment Status</DrawerTitle>
           {clusterInfo.map((info) => (
             <DrawerItem
-              key={`${info.clusterRef.namespace}/${info.clusterRef.name}`}
-              name={`${info.clusterRef.namespace ?? ""}/${info.clusterRef.name ?? ""}`}
+              key={`${info.cluster.namespace}/${info.cluster.name}`}
+              name={`${info.cluster.namespace ?? ""}/${info.cluster.name ?? ""}`}
             >
               {[info.status, info.failureMessage].filter(Boolean).join(" · ")}
             </DrawerItem>
