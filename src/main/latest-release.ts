@@ -1,5 +1,5 @@
 import { httpGet } from "./http";
-import { compareVersions, isStableVersion } from "./version";
+import { compareVersions, isStableVersion } from "../common/version";
 
 // The Atom feed is not subject to the 60 requests per hour of the REST API, which
 // is shared by every client behind the same address.

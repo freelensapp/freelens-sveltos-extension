@@ -1,12 +1,7 @@
 import { gzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
-import {
-  decodeHelmRelease,
-  findHelmReleaseRequest,
-  parseKubeconfig,
-  parseManifestResources,
-  toHelmReleaseInfo,
-} from "./helm-release";
+import { findHelmReleaseRequest } from "../common/helm-release";
+import { decodeHelmRelease, parseKubeconfig, parseManifestResources, toHelmReleaseInfo } from "./helm-release";
 
 const kubeconfig = `
 apiVersion: v1

@@ -1,9 +1,7 @@
 import { Renderer } from "@freelensapp/extensions";
 import * as MobxReact from "mobx-react";
 import { EventTrigger, type EventTriggerApi } from "../api/utils/event-trigger-v1beta1";
-import { withErrorPage } from "../components/error-page";
 import styles from "./sveltos-page.module.scss";
-import stylesInline from "./sveltos-page.module.scss?inline";
 
 const { observer } = MobxReact;
 
@@ -37,32 +35,29 @@ export interface EventTriggersPageProps {
   extension: Renderer.LensExtension;
 }
 
-export const EventTriggersPage = observer((props: EventTriggersPageProps) =>
-  withErrorPage(props, () => {
-    const store = KubeObject.getStore<KubeObject>();
+export const EventTriggersPage = observer((props: EventTriggersPageProps) => {
+  const store = KubeObject.getStore<KubeObject>();
 
-    return (
-      <>
-        <style>{stylesInline}</style>
-        <KubeObjectListLayout<KubeObject, KubeObjectApi>
-          tableId={`${KubeObject.crd.plural}Table`}
-          isConfigurable
-          className={styles.page}
-          store={store}
-          sortingCallbacks={sortingCallbacks}
-          searchFilters={[(object: KubeObject) => object.getSearchFields()]}
-          renderHeaderTitle={KubeObject.crd.title}
-          renderTableHeader={renderTableHeader}
-          renderTableContents={(object: KubeObject) => [
-            <WithTooltip>{object.getName()}</WithTooltip>,
-            <WithTooltip>{KubeObject.getEventSourceName(object) ?? "N/A"}</WithTooltip>,
-            <BadgeBoolean value={object.spec?.oneForEvent ?? false} />,
-            <WithTooltip>{object.spec?.syncMode ?? "Continuous"}</WithTooltip>,
-            <WithTooltip>{KubeObject.getMatchingClusterCount(object)}</WithTooltip>,
-            <KubeObjectAge object={object} key="age" />,
-          ]}
-        />
-      </>
-    );
-  }),
-);
+  return (
+    <>
+      <KubeObjectListLayout<KubeObject, KubeObjectApi>
+        tableId={`${KubeObject.crd.plural}Table`}
+        isConfigurable
+        className={styles.page}
+        store={store}
+        sortingCallbacks={sortingCallbacks}
+        searchFilters={[(object: KubeObject) => object.getSearchFields()]}
+        renderHeaderTitle={KubeObject.crd.title}
+        renderTableHeader={renderTableHeader}
+        renderTableContents={(object: KubeObject) => [
+          <WithTooltip>{object.getName()}</WithTooltip>,
+          <WithTooltip>{KubeObject.getEventSourceName(object) ?? "N/A"}</WithTooltip>,
+          <BadgeBoolean value={object.spec?.oneForEvent ?? false} />,
+          <WithTooltip>{object.spec?.syncMode ?? "Continuous"}</WithTooltip>,
+          <WithTooltip>{KubeObject.getMatchingClusterCount(object)}</WithTooltip>,
+          <KubeObjectAge object={object} key="age" />,
+        ]}
+      />
+    </>
+  );
+});

@@ -1,9 +1,7 @@
 import { Renderer } from "@freelensapp/extensions";
 import * as MobxReact from "mobx-react";
 import { Classifier, type ClassifierApi } from "../api/lib/classifier-v1beta1";
-import { withErrorPage } from "../components/error-page";
 import styles from "./sveltos-page.module.scss";
-import stylesInline from "./sveltos-page.module.scss?inline";
 
 const { observer } = MobxReact;
 
@@ -40,31 +38,28 @@ export interface ClassifiersPageProps {
   extension: Renderer.LensExtension;
 }
 
-export const ClassifiersPage = observer((props: ClassifiersPageProps) =>
-  withErrorPage(props, () => {
-    const store = KubeObject.getStore<KubeObject>();
+export const ClassifiersPage = observer((props: ClassifiersPageProps) => {
+  const store = KubeObject.getStore<KubeObject>();
 
-    return (
-      <>
-        <style>{stylesInline}</style>
-        <KubeObjectListLayout<KubeObject, KubeObjectApi>
-          tableId={`${KubeObject.crd.plural}Table`}
-          isConfigurable
-          className={styles.page}
-          store={store}
-          sortingCallbacks={sortingCallbacks}
-          searchFilters={[(object: KubeObject) => object.getSearchFields()]}
-          renderHeaderTitle={KubeObject.crd.title}
-          renderTableHeader={renderTableHeader}
-          renderTableContents={(object: KubeObject) => [
-            <WithTooltip>{object.getName()}</WithTooltip>,
-            <WithTooltip>{KubeObject.getLabels(object).join(", ") || "N/A"}</WithTooltip>,
-            <WithTooltip>{getVersionConstraints(object) || "N/A"}</WithTooltip>,
-            <WithTooltip>{KubeObject.getMatchingClusterCount(object)}</WithTooltip>,
-            <KubeObjectAge object={object} key="age" />,
-          ]}
-        />
-      </>
-    );
-  }),
-);
+  return (
+    <>
+      <KubeObjectListLayout<KubeObject, KubeObjectApi>
+        tableId={`${KubeObject.crd.plural}Table`}
+        isConfigurable
+        className={styles.page}
+        store={store}
+        sortingCallbacks={sortingCallbacks}
+        searchFilters={[(object: KubeObject) => object.getSearchFields()]}
+        renderHeaderTitle={KubeObject.crd.title}
+        renderTableHeader={renderTableHeader}
+        renderTableContents={(object: KubeObject) => [
+          <WithTooltip>{object.getName()}</WithTooltip>,
+          <WithTooltip>{KubeObject.getLabels(object).join(", ") || "N/A"}</WithTooltip>,
+          <WithTooltip>{getVersionConstraints(object) || "N/A"}</WithTooltip>,
+          <WithTooltip>{KubeObject.getMatchingClusterCount(object)}</WithTooltip>,
+          <KubeObjectAge object={object} key="age" />,
+        ]}
+      />
+    </>
+  );
+});

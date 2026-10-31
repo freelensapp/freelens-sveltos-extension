@@ -1,5 +1,5 @@
 import { Common } from "@freelensapp/extensions";
-import { makeObservable, observable } from "mobx";
+import { observable, observableRef } from "mobx";
 import { normalizeUiSettings, type UiSettings } from "../ui-settings";
 
 export interface SveltosPreferencesModel {
@@ -11,18 +11,17 @@ export interface SveltosPreferencesModel {
 }
 
 export class SveltosPreferencesStore extends Common.Store.ExtensionStore<SveltosPreferencesModel> {
-  @observable insecureTls = false;
-  @observable metadataFilter?: string;
-  @observable latestRelease?: string;
-  @observable latestReleaseCheckedAt?: number;
-  @observable.ref uiSettings?: UiSettings;
+  @observable accessor insecureTls = false;
+  @observable accessor metadataFilter: string | undefined = undefined;
+  @observable accessor latestRelease: string | undefined = undefined;
+  @observable accessor latestReleaseCheckedAt: number | undefined = undefined;
+  @observableRef accessor uiSettings: UiSettings | undefined = undefined;
 
   constructor() {
     super({
       configName: "sveltos-preferences-store",
       defaults: { insecureTls: false },
     });
-    makeObservable(this);
   }
 
   fromStore({
