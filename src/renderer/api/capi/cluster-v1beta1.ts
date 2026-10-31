@@ -20,6 +20,9 @@ export class CapiCluster extends Renderer.K8sApi.LensExtensionKubeObject<
   CapiClusterStatus,
   CapiClusterSpec
 > {
+  declare kind: "Cluster";
+  declare apiVersion: "cluster.x-k8s.io/v1beta1";
+
   static readonly kind = "Cluster";
   static readonly namespaced = true;
   // ponytail: v1beta1 only, still served by CAPI 1.11; add v1beta2 when clusters stop serving v1beta1.

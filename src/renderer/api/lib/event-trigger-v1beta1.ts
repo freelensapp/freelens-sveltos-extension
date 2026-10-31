@@ -54,6 +54,9 @@ export class EventTrigger extends Renderer.K8sApi.LensExtensionKubeObject<
   EventTriggerStatus,
   EventTriggerSpec
 > {
+  declare kind: "EventTrigger";
+  declare apiVersion: "lib.projectsveltos.io/v1beta1";
+
   static readonly kind = "EventTrigger";
   static readonly namespaced = false;
   static readonly apiBase = "/apis/lib.projectsveltos.io/v1beta1/eventtriggers";

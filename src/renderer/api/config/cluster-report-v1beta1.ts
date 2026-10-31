@@ -28,6 +28,9 @@ export class ClusterReport extends Renderer.K8sApi.LensExtensionKubeObject<
   ClusterReportStatus,
   ClusterReportSpec
 > {
+  declare kind: "ClusterReport";
+  declare apiVersion: "config.projectsveltos.io/v1beta1";
+
   static readonly kind = "ClusterReport";
   static readonly namespaced = true;
   static readonly apiBase = "/apis/config.projectsveltos.io/v1beta1/clusterreports";

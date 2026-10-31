@@ -1,11 +1,11 @@
-import { Renderer } from "@freelensapp/extensions";
+import { Common, Renderer } from "@freelensapp/extensions";
 import { SveltosCluster } from "../api/lib/sveltos-cluster-v1beta1";
 
 const {
   Component: { Icon, MenuItem },
 } = Renderer;
 
-export interface SveltosClusterPauseMenuItemProps extends Renderer.Component.KubeObjectMenuProps<SveltosCluster> {}
+export interface SveltosClusterPauseMenuItemProps extends Common.Types.KubeObjectMenuItemProps<SveltosCluster> {}
 
 export const SveltosClusterPauseMenuItem = (props: SveltosClusterPauseMenuItemProps) => {
   const { object, toolbar } = props;

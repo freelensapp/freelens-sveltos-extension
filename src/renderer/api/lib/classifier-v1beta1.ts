@@ -39,6 +39,9 @@ export class Classifier extends Renderer.K8sApi.LensExtensionKubeObject<
   ClassifierStatus,
   ClassifierSpec
 > {
+  declare kind: "Classifier";
+  declare apiVersion: "lib.projectsveltos.io/v1beta1";
+
   static readonly kind = "Classifier";
   static readonly namespaced = false;
   static readonly apiBase = "/apis/lib.projectsveltos.io/v1beta1/classifiers";
