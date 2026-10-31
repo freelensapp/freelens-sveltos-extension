@@ -147,7 +147,7 @@ for more information.
 | lib.projectsveltos.io/v1beta1    | `SveltosCluster`       | Namespaced |
 | lib.projectsveltos.io/v1beta1    | `Classifier`           | Cluster    |
 | lib.projectsveltos.io/v1beta1    | `EventSource`          | Cluster    |
-| utils.projectsveltos.io/v1beta1  | `EventTrigger`         | Cluster    |
+| lib.projectsveltos.io/v1beta1    | `EventTrigger`         | Cluster    |
 
 <!-- markdownlint-enable MD013 -->
 

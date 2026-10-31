@@ -10,10 +10,10 @@ import { ClusterSummary } from "../api/config/cluster-summary-v1beta1";
 import { Profile } from "../api/config/profile-v1beta1";
 import { Classifier } from "../api/lib/classifier-v1beta1";
 import { EventSource } from "../api/lib/event-source-v1beta1";
+import { EventTrigger } from "../api/lib/event-trigger-v1beta1";
 import { SveltosCluster } from "../api/lib/sveltos-cluster-v1beta1";
 import { subscribeToStores } from "../api/subscribe-stores";
 import { getSveltosComponents, getSveltosVersion, type SveltosComponent } from "../api/sveltos-version";
-import { EventTrigger } from "../api/utils/event-trigger-v1beta1";
 import styles from "./overview-page.module.scss";
 
 const { observer } = MobxReact;

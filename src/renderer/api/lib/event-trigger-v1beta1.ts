@@ -56,10 +56,10 @@ export class EventTrigger extends Renderer.K8sApi.LensExtensionKubeObject<
 > {
   static readonly kind = "EventTrigger";
   static readonly namespaced = false;
-  static readonly apiBase = "/apis/utils.projectsveltos.io/v1beta1/eventtriggers";
+  static readonly apiBase = "/apis/lib.projectsveltos.io/v1beta1/eventtriggers";
 
   static readonly crd: SveltosKubeObjectCRD = {
-    apiVersions: ["utils.projectsveltos.io/v1beta1"],
+    apiVersions: ["lib.projectsveltos.io/v1beta1"],
     plural: "eventtriggers",
     singular: "eventtrigger",
     title: "Event Triggers",

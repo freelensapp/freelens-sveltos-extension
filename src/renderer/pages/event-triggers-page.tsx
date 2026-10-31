@@ -1,6 +1,6 @@
 import { Renderer } from "@freelensapp/extensions";
 import * as MobxReact from "mobx-react";
-import { EventTrigger, type EventTriggerApi } from "../api/utils/event-trigger-v1beta1";
+import { EventTrigger, type EventTriggerApi } from "../api/lib/event-trigger-v1beta1";
 import styles from "./sveltos-page.module.scss";
 
 const { observer } = MobxReact;

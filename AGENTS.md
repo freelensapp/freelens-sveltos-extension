@@ -54,7 +54,6 @@ src/
   renderer/api/types.ts     # Shared Sveltos types (ProfileSpec, Selector, ResourceReport, ...)
   renderer/api/config/      # config.projectsveltos.io CRDs
   renderer/api/lib/         # lib.projectsveltos.io CRDs
-  renderer/api/utils/       # utils.projectsveltos.io CRDs
   renderer/details/         # Detail view components for CRDs
   renderer/pages/           # Cluster page components
   renderer/menus/           # Kube object context menu items

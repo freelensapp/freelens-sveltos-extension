@@ -3,7 +3,7 @@
 import { Common, type Renderer } from "@freelensapp/extensions";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { EventTrigger } from "../api/utils/event-trigger-v1beta1";
+import { EventTrigger } from "../api/lib/event-trigger-v1beta1";
 import { EventTriggersPage } from "../pages/event-triggers-page";
 import {
   ErrorBoundary,

@@ -21,10 +21,10 @@ import { Profile } from "./api/config/profile-v1beta1";
 import { setHelmReleaseFetcher } from "./api/helm-release";
 import { Classifier } from "./api/lib/classifier-v1beta1";
 import { EventSource } from "./api/lib/event-source-v1beta1";
+import { EventTrigger } from "./api/lib/event-trigger-v1beta1";
 import { SveltosCluster } from "./api/lib/sveltos-cluster-v1beta1";
 import { setMetadataFilterFetcher } from "./api/metadata-filter";
 import { setUiSettingsFetcher } from "./api/ui-settings";
-import { EventTrigger } from "./api/utils/event-trigger-v1beta1";
 import { createAvailableVersionPage } from "./components/available-version";
 import {
   withDetailsErrorBoundary,

@@ -3,7 +3,7 @@ import * as MobxReact from "mobx-react";
 import { selectorToString } from "../api/types";
 import { ObjectReferenceList } from "../components/object-reference-list";
 
-import type { EventTrigger } from "../api/utils/event-trigger-v1beta1";
+import type { EventTrigger } from "../api/lib/event-trigger-v1beta1";
 
 const { observer } = MobxReact;
 
