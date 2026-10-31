@@ -43,10 +43,15 @@ const crdName = "examples.example.freelens.app";
 // (`sanitizeExtensionName` in Freelens's `lens-extension.ts`).
 const sanitizedExtensionId = extensionName.replace("@", "").replace("/", "--");
 
-// The link inside the sidebar item of the extension's cluster page: the
+// The link inside the sidebar item of the Profiles page: the
 // `clusterPageMenus` id, after the sanitized package name. Only the link
-// navigates.
-const pageLinkTestId = `link-for-sidebar-item-${sanitizedExtensionId}-sveltos-overview`;
+// navigates. Profiles are namespaced, so the page has the namespace
+// selector that the sessions use.
+const pageLinkTestId = `link-for-sidebar-item-${sanitizedExtensionId}-sveltos-profiles`;
+
+// The link of the "Sveltos" group that holds the pages. The sidebar renders the items of a group only while it
+// is expanded, and a click on the group toggles it (`sidebar-item.tsx` in Freelens).
+const pageGroupLinkTestId = `link-for-sidebar-item-${sanitizedExtensionId}-sveltos`;
 
 // The title and the input placeholder of the extension's `appPreferences` entry.
 const preferencesTitle = "Sveltos metadata filter";
@@ -507,7 +512,7 @@ export async function disconnectKindCluster({ window }: AppSession) {
  * returns the cluster's frame, where the extension's pages, details and menus
  * render.
  */
-export async function openKindCluster({ window }: AppSession): Promise<Frame> {
+export async function openKindCluster({ window }: AppSession, { selectNamespace = true } = {}): Promise<Frame> {
   const id = await kindClusterId(window);
 
   await navigate(window, `/cluster/${id}`);
@@ -520,7 +525,10 @@ export async function openKindCluster({ window }: AppSession): Promise<Frame> {
   }
 
   await frame.waitForSelector("[data-testid=cluster-sidebar]", viewTimeout);
-  await selectTestNamespace(frame);
+
+  if (selectNamespace) {
+    await selectTestNamespace(frame);
+  }
 
   return frame;
 }
@@ -531,6 +539,18 @@ export async function openKindCluster({ window }: AppSession): Promise<Frame> {
  * re-lays out over the click point (`clickSidebarItem` in Freelens's
  * integration helpers).
  */
+/**
+ * Expands the "Sveltos" group of the cluster sidebar, unless its pages are listed already: a click on an expanded
+ * group would collapse it.
+ */
+export async function expandSidebarGroup(frame: Frame) {
+  await frame.waitForSelector(`[data-testid="${pageGroupLinkTestId}"]`, viewTimeout);
+
+  if (!(await frame.locator(`[data-testid="${pageLinkTestId}"]`).count())) {
+    await clickSidebarItem(frame, pageGroupLinkTestId);
+  }
+}
+
 async function clickSidebarItem(frame: Frame, testId: string) {
   await frame.dispatchEvent(`[data-testid="${testId}"]`, "click");
 }
@@ -543,7 +563,8 @@ async function clickSidebarItem(frame: Frame, testId: string) {
  * session opens no page of the host, whose requests can log errors of their
  * own: the Pods page asks for pod metrics, and kind has no metrics server.
  */
-async function selectTestNamespace(frame: Frame) {
+export async function selectTestNamespace(frame: Frame) {
+  await expandSidebarGroup(frame);
   await frame.waitForSelector(`[data-testid="${pageLinkTestId}"]`, viewTimeout);
   await clickSidebarItem(frame, pageLinkTestId);
 
@@ -639,6 +660,7 @@ async function closeDetails(frame: Frame) {
  * test object.
  */
 export async function openListPage(frame: Frame): Promise<Locator> {
+  await expandSidebarGroup(frame);
   await frame.waitForSelector(`[data-testid="${pageLinkTestId}"]`, viewTimeout);
   await clickSidebarItem(frame, pageLinkTestId);
   await closeDetails(frame);
