@@ -3,11 +3,22 @@ export interface SveltosComponent {
   namespace: string;
   image: string;
   version?: string;
+  /** `--shard-key` of a controller the shard-controller deployed for one shard. */
+  shard?: string;
 }
 
 interface DeploymentLike {
   metadata: { name: string; namespace?: string };
-  spec?: { template?: { spec?: { containers?: { image?: string }[] } } };
+  spec?: { template?: { spec?: { containers?: { image?: string; args?: string[] }[] } } };
+}
+
+function argValue(args: string[], flag: string): string | undefined {
+  for (const [index, arg] of args.entries()) {
+    if (arg.startsWith(`${flag}=`)) return arg.slice(flag.length + 1) || undefined;
+    if (arg === flag) return args[index + 1] || undefined;
+  }
+
+  return undefined;
 }
 
 /** Returns the tag of an image reference, ignoring registries with a port and digests. */
@@ -21,21 +32,32 @@ export function imageTag(image: string): string | undefined {
 
 export function getSveltosComponents(deployments: DeploymentLike[]): SveltosComponent[] {
   return deployments.flatMap((deployment) => {
-    const image = (deployment.spec?.template?.spec?.containers ?? [])
-      .map((container) => container.image)
-      .find((candidate) => candidate?.includes("projectsveltos/"));
+    const container = (deployment.spec?.template?.spec?.containers ?? []).find((candidate) =>
+      candidate.image?.includes("projectsveltos/"),
+    );
 
-    if (!image) return [];
+    if (!container?.image) return [];
+
+    const args = container.args ?? [];
 
     return [
       {
         name: deployment.metadata.name,
         namespace: deployment.metadata.namespace ?? "",
-        image,
-        version: imageTag(image),
+        image: container.image,
+        // Shard deployments pin the image by digest, the release is only in `--version`.
+        version: imageTag(container.image) ?? argValue(args, "--version"),
+        shard: argValue(args, "--shard-key"),
       },
     ];
   });
+}
+
+/** Name of a shard controller without its `-<shard>` suffix, `addon-controller-aws` is `addon-controller`. */
+export function baseName(component: SveltosComponent): string {
+  const suffix = component.shard ? `-${component.shard}` : "";
+
+  return suffix && component.name.endsWith(suffix) ? component.name.slice(0, -suffix.length) : component.name;
 }
 
 /** The version shared by most Sveltos controllers, which is the release the cluster runs. */

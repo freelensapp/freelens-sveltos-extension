@@ -83,3 +83,81 @@
   flex-wrap: wrap;
   gap: vars.$margin * 0.5;
 }
+
+.controller {
+  align-items: center;
+  background: rgb(128 128 128 / 12%);
+  border-radius: 4px;
+  display: inline-flex;
+  font-size: 0.75rem;
+  gap: vars.$margin * 0.5;
+  padding: 2px vars.$padding * 0.75;
+}
+
+.controllerWarn {
+  background: rgb(255 167 38 / 18%);
+}
+
+.controllerVersion {
+  color: var(--colorWarning, #ffa726);
+  font-weight: 600;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: vars.$margin * 2 0 0;
+}
+
+.shards {
+  display: grid;
+  gap: vars.$margin * 1.5;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  margin-top: vars.$margin;
+}
+
+.shard {
+  background: var(--contentColor);
+  border: 1px solid var(--borderFaintColor);
+  border-left: 4px solid var(--borderFaintColor);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: vars.$margin;
+  padding: vars.$padding * 1.5;
+}
+
+.shardHeader {
+  align-items: center;
+  display: flex;
+  gap: vars.$margin * 0.75;
+}
+
+.shardName {
+  flex: 1;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shardWarn {
+  color: var(--colorWarning, #ffa726);
+  font-size: 0.8rem;
+}
+
+.shardColor {
+  align-items: center;
+  display: inline-flex;
+  gap: 2px;
+}
+
+.shardColorInput {
+  background: none;
+  border: 1px solid var(--borderFaintColor);
+  border-radius: 4px;
+  cursor: pointer;
+  height: 22px;
+  padding: 1px;
+  width: 28px;
+}

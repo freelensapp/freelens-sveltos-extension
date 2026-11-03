@@ -16,5 +16,11 @@ export const getConnectionStatus = (cluster: AnyCluster) =>
 export const getVersion = (cluster: AnyCluster) =>
   isCapi(cluster) ? CapiCluster.getVersion(cluster) : SveltosCluster.getVersion(cluster);
 
+export const shardAnnotation = "sharding.projectsveltos.io/key";
+
+/** Shard of the Sveltos controllers that manage the cluster, `undefined` for the default controllers. */
+export const getShard = (cluster: AnyCluster): string | undefined =>
+  cluster.metadata.annotations?.[shardAnnotation] || undefined;
+
 export const getPaused = (cluster: AnyCluster) =>
   isCapi(cluster) ? CapiCluster.getPaused(cluster) : SveltosCluster.getPaused(cluster);

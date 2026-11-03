@@ -4,6 +4,8 @@ export interface UiSettings {
   hiddenColumns: Record<string, string[]>;
   /** Collapsed state per section id, absent keys use the section default. */
   collapsed: Record<string, boolean>;
+  /** `#rrggbb` per shard key, `""` for the default shard; an empty color in a patch removes the entry. */
+  shardColors: Record<string, string>;
 }
 
 /** Without a patch the request only reads the current settings. */
@@ -13,8 +15,10 @@ export interface UiSettingsRequest {
 }
 
 export function emptyUiSettings(): UiSettings {
-  return { hiddenColumns: {}, collapsed: {} };
+  return { hiddenColumns: {}, collapsed: {}, shardColors: {} };
 }
+
+const hexColor = /^#[0-9a-f]{6}$/i;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -40,6 +44,12 @@ export function normalizeUiSettings(value: unknown): UiSettings {
     }
   }
 
+  if (isRecord(value.shardColors)) {
+    for (const [shard, color] of Object.entries(value.shardColors)) {
+      if (typeof color === "string" && (color === "" || hexColor.test(color))) settings.shardColors[shard] = color;
+    }
+  }
+
   return settings;
 }
 
@@ -50,6 +60,9 @@ export function mergeUiSettings(current: UiSettings, patch: Partial<UiSettings> 
   return {
     hiddenColumns: { ...current.hiddenColumns, ...normalized.hiddenColumns },
     collapsed: { ...current.collapsed, ...normalized.collapsed },
+    shardColors: Object.fromEntries(
+      Object.entries({ ...current.shardColors, ...normalized.shardColors }).filter(([, color]) => color !== ""),
+    ),
   };
 }
 

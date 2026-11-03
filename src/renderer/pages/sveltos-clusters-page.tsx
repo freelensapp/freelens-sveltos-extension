@@ -11,6 +11,7 @@ import {
   getConnectionStatus,
   getPaused,
   getReady,
+  getShard,
   getVersion,
   isCapi,
 } from "../api/clusters";
@@ -23,6 +24,7 @@ import { reuseUnchanged } from "../api/reuse-unchanged";
 import { matchesSearchQuery, parseSearchQuery, toSearchFields } from "../api/search-query";
 import { countByStatus, matchesStatus } from "../api/status-filter";
 import { subscribeToStores } from "../api/subscribe-stores";
+import { getShardColor } from "../api/ui-settings";
 import { AddonsView } from "../components/addons-view";
 import { ClusterCard } from "../components/cluster-card";
 import { useColumnResize } from "../components/column-resize";
@@ -76,6 +78,7 @@ function clusterSearchTarget(cluster: AnyCluster, status: string) {
       ready: String(getReady(cluster)),
       connection: getConnectionStatus(cluster),
       paused: String(getPaused(cluster)),
+      shard: getShard(cluster),
       status,
     }),
   };
@@ -513,6 +516,29 @@ const clusterColumns: ClusterColumn[] = [
   },
 ];
 
+/** Rows grouped by shard, default shard first; one group without a header when no cluster is sharded. */
+function groupByShard(clusters: AnyCluster[]): { shard?: string; clusters: AnyCluster[] }[] {
+  const groups = new Map<string | undefined, AnyCluster[]>();
+
+  for (const cluster of clusters) {
+    const shard = getShard(cluster);
+    const group = groups.get(shard);
+
+    if (group) group.push(cluster);
+    else groups.set(shard, [cluster]);
+  }
+
+  return [...groups]
+    .map(([shard, clusters]) => ({ shard, clusters }))
+    .sort((a, b) => (a.shard === undefined ? -1 : b.shard === undefined ? 1 : a.shard.localeCompare(b.shard)));
+}
+
+function shardColor(shard: string | undefined): React.CSSProperties | undefined {
+  const color = getShardColor(shard);
+
+  return color ? { boxShadow: `inset 4px 0 0 ${color}`, background: `${color}26` } : undefined;
+}
+
 interface ClustersTableProps {
   clusters: AnyCluster[];
   stats: Map<string, ClusterStats>;
@@ -528,6 +554,8 @@ const ClustersTable = observer(({ clusters, stats, selected, onSelect, onToggleP
   const actions = useLatest({ onSelect, onTogglePause });
   const shown = clusterColumns.filter((column) => !hidden.has(column.id));
   const { sorted, sortHeadProps } = useTableSort(clusters, sortingCallbacks, "name");
+  const groups = React.useMemo(() => groupByShard(sorted), [sorted]);
+  const showGroups = groups.some((group) => group.shard !== undefined);
 
   return (
     <div className={styles.tableScroll}>
@@ -547,52 +575,70 @@ const ClustersTable = observer(({ clusters, stats, selected, onSelect, onToggleP
           <TableCell className={styles.cellIcon}>{""}</TableCell>
           <TableCell className={styles.cellIcon}>{""}</TableCell>
         </TableHead>
-        {sorted.map((cluster) => {
-          const clusterStats = stats.get(keyOf(cluster)) ?? emptyStats;
-          const paused = getPaused(cluster);
-
-          return (
+        {groups.flatMap((group) => [
+          showGroups ? (
             <TableRow
-              key={cluster.getId()}
+              key={`shard:${group.shard ?? ""}`}
               nowrap
-              selected={keyOf(cluster) === selected}
-              onClick={() => actions.current.onSelect(cluster)}
+              className={styles.shardRow}
+              style={shardColor(group.shard)}
             >
-              {shown.map((column) => (
-                <TableCell key={column.id} className={`${column.className} ${cellClass(column.id)}`}>
-                  {column.render(cluster, clusterStats)}
-                </TableCell>
-              ))}
-              <TableCell className={styles.cellIcon}>
-                {/* Pausing a CAPI Cluster would also stop ClusterAPI itself, not only Sveltos. */}
-                {isCapi(cluster) ? null : (
-                  <Icon
-                    material={paused ? "play_circle_outline" : "pause_circle_filled"}
-                    small
-                    interactive
-                    tooltip={paused ? "Resume" : "Pause"}
-                    onClick={(event: React.MouseEvent) => {
-                      event.stopPropagation();
-                      actions.current.onTogglePause(cluster);
-                    }}
-                  />
-                )}
-              </TableCell>
-              <TableCell className={styles.cellIcon}>
-                <Icon
-                  material="open_in_new"
-                  small
-                  interactive
-                  tooltip="Open details"
-                  onClick={(event: React.MouseEvent) => {
-                    event.stopPropagation();
-                    showDetails(cluster.selfLink);
-                  }}
-                />
+              <TableCell className={styles.shardCell}>
+                <Icon material="dns" small />
+                <span className={styles.shardTitle}>{group.shard ?? "Default shard"}</span>
+                <span className={styles.shardCount}>
+                  {group.clusters.length} cluster{group.clusters.length === 1 ? "" : "s"}
+                </span>
               </TableCell>
             </TableRow>
-          );
-        })}
+          ) : null,
+          ...group.clusters.map((cluster) => {
+            const clusterStats = stats.get(keyOf(cluster)) ?? emptyStats;
+            const paused = getPaused(cluster);
+
+            return (
+              <TableRow
+                key={cluster.getId()}
+                nowrap
+                selected={keyOf(cluster) === selected}
+                onClick={() => actions.current.onSelect(cluster)}
+              >
+                {shown.map((column) => (
+                  <TableCell key={column.id} className={`${column.className} ${cellClass(column.id)}`}>
+                    {column.render(cluster, clusterStats)}
+                  </TableCell>
+                ))}
+                <TableCell className={styles.cellIcon}>
+                  {/* Pausing a CAPI Cluster would also stop ClusterAPI itself, not only Sveltos. */}
+                  {isCapi(cluster) ? null : (
+                    <Icon
+                      material={paused ? "play_circle_outline" : "pause_circle_filled"}
+                      small
+                      interactive
+                      tooltip={paused ? "Resume" : "Pause"}
+                      onClick={(event: React.MouseEvent) => {
+                        event.stopPropagation();
+                        actions.current.onTogglePause(cluster);
+                      }}
+                    />
+                  )}
+                </TableCell>
+                <TableCell className={styles.cellIcon}>
+                  <Icon
+                    material="open_in_new"
+                    small
+                    interactive
+                    tooltip="Open details"
+                    onClick={(event: React.MouseEvent) => {
+                      event.stopPropagation();
+                      showDetails(cluster.selfLink);
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          }),
+        ])}
       </Table>
     </div>
   );

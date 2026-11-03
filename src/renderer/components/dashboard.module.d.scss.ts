@@ -112,6 +112,10 @@ declare const classNames: {
   readonly cellTiny: "cellTiny";
   readonly cellIcon: "cellIcon";
   readonly cellText: "cellText";
+  readonly shardRow: "shardRow";
+  readonly shardCell: "shardCell";
+  readonly shardTitle: "shardTitle";
+  readonly shardCount: "shardCount";
   readonly resourceGroups: "resourceGroups";
   readonly resourceToolbar: "resourceToolbar";
   readonly resourceGroup: "resourceGroup";
