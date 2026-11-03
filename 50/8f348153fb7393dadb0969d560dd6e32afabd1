@@ -1,0 +1,74 @@
+src/renderer/pages/overview-page.tsx
+  s_e3d2a3216d61f2::t_456899b5381362 18,93-118,126-130,165,323-344,346-347
+  s_e3d2a3216d61f2::t_e0751d4da8eb3d 17
+  s_e3d2a3216d61f2::t_3cb5accc7c810a 119-125
+  s_e3d2a3216d61f2::t_ac169a86d4ea96 7,42-92,211-212,291-293,306-307,319-322,345,348-350
+  s_ab45d2f0c0534e::t_a0819439b5f298 166,351
+src/common/ui-settings.ts
+  s_e3d2a3216d61f2::t_2eacd4abe820cc 7-8,18,21-22,47-52,63-65
+src/renderer/pages/overview-page.module.d.scss.ts
+  s_e3d2a3216d61f2::t_e0751d4da8eb3d 14-22
+  s_e3d2a3216d61f2::t_3cb5accc7c810a 23-24
+src/renderer/api/sveltos-version.test.ts
+  s_e3d2a3216d61f2::t_f7cb54b4c90e5c 2,4,6,36,40-61
+src/renderer/components/dashboard.module.d.scss.ts
+  s_e3d2a3216d61f2::t_225dd0c9017f6f 115-118
+src/common/ui-settings.test.ts
+  s_e3d2a3216d61f2::t_2eacd4abe820cc 11-15,26,32,35-39
+src/renderer/api/clusters.ts
+  s_e3d2a3216d61f2::t_cfdddc156f52ac 19-24
+src/renderer/api/sveltos-version.ts
+  s_e3d2a3216d61f2::t_f7cb54b4c90e5c 6-7,12-21,35-37,39-41,47-50,56-60
+  s_e7e01617fe6ce0::t_571ae6bbf71fca 61-62
+src/renderer/components/dashboard.module.scss
+  s_e3d2a3216d61f2::t_cfdddc156f52ac 805-829
+src/common/store/preferences-store.test.ts
+  s_e3d2a3216d61f2::t_8bb5cbc0154355 29-33
+src/renderer/pages/overview-page.module.scss
+  s_e3d2a3216d61f2::t_456899b5381362 122,147-162
+  s_e3d2a3216d61f2::t_ac169a86d4ea96 86-121,123-146,163
+src/renderer/pages/sveltos-clusters-page.tsx
+  h_09b226bca72d07 27,534-539
+  s_e3d2a3216d61f2::t_0f7a09d0e23d49 581,583-584
+  s_e3d2a3216d61f2::t_4344c792a1452c 596-624,626,628,631,634,637-639
+  s_e3d2a3216d61f2::t_cfdddc156f52ac 14,81,519-533,540-541,557-558,578-579,586-595,640-641
+src/renderer/api/ui-settings.ts
+  s_e3d2a3216d61f2::t_2eacd4abe820cc 82-89
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "508f348153fb7393dadb0969d560dd6e32afabd1",
+  "prompts": {},
+  "humans": {
+    "h_09b226bca72d07": {
+      "author": "Alberto LL <alberto.lunghi@wolterskluwer.com>"
+    }
+  },
+  "sessions": {
+    "s_ab45d2f0c0534e": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "fcb4de98-b66f-41b2-ae85-8cae232428db",
+        "model": "auto"
+      },
+      "human_author": "Alberto LL <alberto.lunghi@wolterskluwer.com>"
+    },
+    "s_e3d2a3216d61f2": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "8e2ff0d8-0858-458d-9e0e-a5e53a2e468f",
+        "model": "unknown"
+      },
+      "human_author": "Alberto LL <alberto.lunghi@wolterskluwer.com>"
+    },
+    "s_e7e01617fe6ce0": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "6e5bdd4d-939f-4f69-a611-a1a28863533e",
+        "model": "auto"
+      },
+      "human_author": "Alberto LL <alberto.lunghi@wolterskluwer.com>"
+    }
+  }
+}
