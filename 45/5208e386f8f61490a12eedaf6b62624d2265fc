@@ -1,0 +1,24 @@
+src/renderer/api/sveltos-version.ts
+  s_90da8adbc1876d::t_653b99fc825e5d 22-28
+src/renderer/pages/overview-page.tsx
+  s_90da8adbc1876d::t_653b99fc825e5d 16,212-217
+src/renderer/api/sveltos-version.test.ts
+  s_90da8adbc1876d::t_653b99fc825e5d 2,23-34
+  s_90da8adbc1876d::t_f9b56fef6bc9d2 35-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "455208e386f8f61490a12eedaf6b62624d2265fc",
+  "prompts": {},
+  "sessions": {
+    "s_90da8adbc1876d": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "74338ac2-3bd3-4551-9acf-c7f81fe20a4d",
+        "model": "auto"
+      },
+      "human_author": "Alberto LL <alberto.lunghi@wolterskluwer.com>"
+    }
+  }
+}
