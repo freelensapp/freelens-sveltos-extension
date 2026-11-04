@@ -9,7 +9,10 @@ function describeError(error: unknown): string {
   return cause ? `${error} (${cause})` : String(error);
 }
 
-const cache = new Map<string, ChartIconResult>();
+/** How long an HTTP error is kept, so a 404 is not asked for on every render and a 429 or 5xx is retried. */
+export const failureTtlMs = 5 * 60 * 1000;
+
+const cache = new Map<string, { result: ChartIconResult; expiresAt: number }>();
 
 /**
  * Inlines the chart logo Sveltos reports in ClusterConfiguration as a data URL.
@@ -18,7 +21,7 @@ const cache = new Map<string, ChartIconResult>();
 export async function fetchChartIcon(iconUrl: string): Promise<ChartIconResult> {
   const cached = cache.get(iconUrl);
 
-  if (cached) return cached;
+  if (cached && cached.expiresAt > Date.now()) return cached.result;
 
   try {
     const image = await httpGet(iconUrl);
@@ -27,7 +30,7 @@ export async function fetchChartIcon(iconUrl: string): Promise<ChartIconResult> 
         ? { icon: `data:${image.contentType || "image/png"};base64,${image.body.toString("base64")}` }
         : { reason: `${iconUrl} responded ${image.status}` };
 
-    cache.set(iconUrl, result);
+    cache.set(iconUrl, { result, expiresAt: result.icon ? Infinity : Date.now() + failureTtlMs });
 
     return result;
   } catch (error) {

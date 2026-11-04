@@ -1,12 +1,16 @@
 import { Main } from "@freelensapp/extensions";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fetchChartIcon } from "./chart-icons";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { failureTtlMs, fetchChartIcon } from "./chart-icons";
 
 const fetchMock = vi.mocked(Main.Util.fetch);
 
 describe("fetchChartIcon", () => {
   beforeEach(() => {
     fetchMock.mockReset();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it("inlines the logo as a data URL, fetched with the HTTP client of Freelens", async () => {
@@ -23,7 +27,8 @@ describe("fetchChartIcon", () => {
     );
   });
 
-  it("reports a response that is not 200, and does not ask again for the same URL", async () => {
+  it("reports a response that is not 200, and asks again for the same URL only after a while", async () => {
+    vi.useFakeTimers();
     fetchMock.mockResolvedValueOnce(new Response("", { status: 404 }));
 
     expect(await fetchChartIcon("https://example.com/missing.png")).toEqual({
@@ -33,6 +38,12 @@ describe("fetchChartIcon", () => {
       reason: "https://example.com/missing.png responded 404",
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    vi.advanceTimersByTime(failureTtlMs + 1);
+    fetchMock.mockResolvedValueOnce(new Response("logo", { status: 200 }));
+
+    expect((await fetchChartIcon("https://example.com/missing.png")).icon).toBeDefined();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it("reports a network failure with its cause, and asks again next time", async () => {
