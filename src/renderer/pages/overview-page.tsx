@@ -13,7 +13,7 @@ import { EventSource } from "../api/lib/event-source-v1beta1";
 import { EventTrigger } from "../api/lib/event-trigger-v1beta1";
 import { SveltosCluster } from "../api/lib/sveltos-cluster-v1beta1";
 import { subscribeToStores } from "../api/subscribe-stores";
-import { getSveltosComponents, getSveltosVersion, type SveltosComponent } from "../api/sveltos-version";
+import { getSveltosComponents, getSveltosVersion, imageLabel, type SveltosComponent } from "../api/sveltos-version";
 import styles from "./overview-page.module.scss";
 
 const { observer } = MobxReact;
@@ -209,7 +209,12 @@ export const OverviewPage = observer((props: OverviewPageProps) => {
             {components.length > 0 ? (
               <div className={styles.versionComponents}>
                 {components.map((component) => (
-                  <Badge key={component.name} small label={`${component.name}: ${component.version ?? "?"}`} />
+                  <Badge
+                    key={component.name}
+                    small
+                    label={`${component.name}: ${imageLabel(component.image)}`}
+                    title={component.image}
+                  />
                 ))}
               </div>
             ) : null}
