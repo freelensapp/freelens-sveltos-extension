@@ -14,7 +14,13 @@ import { EventSource } from "../api/lib/event-source-v1beta1";
 import { EventTrigger } from "../api/lib/event-trigger-v1beta1";
 import { SveltosCluster } from "../api/lib/sveltos-cluster-v1beta1";
 import { subscribeToStores } from "../api/subscribe-stores";
-import { baseName, getSveltosComponents, getSveltosVersion, type SveltosComponent } from "../api/sveltos-version";
+import {
+  baseName,
+  getSveltosComponents,
+  getSveltosVersion,
+  type SveltosComponent,
+  versionLabel,
+} from "../api/sveltos-version";
 import { getShardColor, setShardColor, syncUiSettings } from "../api/ui-settings";
 import styles from "./overview-page.module.scss";
 
@@ -82,7 +88,7 @@ function ControllerChips({ controllers, version }: { controllers: SveltosCompone
               title={component.image}
             >
               {baseName(component)}
-              {differs ? <span className={styles.controllerVersion}>{component.version ?? "unknown"}</span> : null}
+              {differs ? <span className={styles.controllerVersion}>{versionLabel(component)}</span> : null}
             </span>
           );
         })}

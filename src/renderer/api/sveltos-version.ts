@@ -37,6 +37,11 @@ export function imageLabel(image: string): string {
   return imageTag(image) ?? (digest ? digest.slice(0, digest.indexOf(":") + 8) : "?");
 }
 
+/** What a controller chip shows: the release from the tag or `--version`, otherwise the short digest or `?`. */
+export function versionLabel(component: SveltosComponent): string {
+  return component.version ?? imageLabel(component.image);
+}
+
 export function getSveltosComponents(deployments: DeploymentLike[]): SveltosComponent[] {
   return deployments.flatMap((deployment) => {
     const container = (deployment.spec?.template?.spec?.containers ?? []).find((candidate) =>
