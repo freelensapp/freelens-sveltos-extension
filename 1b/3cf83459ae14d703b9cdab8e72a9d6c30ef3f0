@@ -1,0 +1,21 @@
+src/renderer/api/deploy-errors.ts
+  s_90da8adbc1876d::t_5079a681686e9b 91,94-95
+src/renderer/api/deploy-errors.test.ts
+  s_90da8adbc1876d::t_c8db4dd67e14e4 1-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1b3cf83459ae14d703b9cdab8e72a9d6c30ef3f0",
+  "prompts": {},
+  "sessions": {
+    "s_90da8adbc1876d": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "74338ac2-3bd3-4551-9acf-c7f81fe20a4d",
+        "model": "auto"
+      },
+      "human_author": "Alberto LL <alberto.lunghi@wolterskluwer.com>"
+    }
+  }
+}
