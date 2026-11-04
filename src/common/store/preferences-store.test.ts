@@ -26,7 +26,11 @@ describe("SveltosPreferencesStore", () => {
       metadataFilter: "^env$",
       latestRelease: "v1.16.1",
       latestReleaseCheckedAt: 2,
-      uiSettings: { hiddenColumns: { clusters: ["age"] }, collapsed: { addons: true } },
+      uiSettings: {
+        hiddenColumns: { clusters: ["age"] },
+        collapsed: { addons: true },
+        shardColors: { "eu-west": "#ff8800" },
+      },
     };
 
     runInAction(() => store.fromStore(model));

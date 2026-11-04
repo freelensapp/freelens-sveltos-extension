@@ -11,5 +11,16 @@ declare const classNames: {
   readonly versionBody: "versionBody";
   readonly versionTitle: "versionTitle";
   readonly versionComponents: "versionComponents";
+  readonly controller: "controller";
+  readonly controllerWarn: "controllerWarn";
+  readonly controllerVersion: "controllerVersion";
+  readonly sectionTitle: "sectionTitle";
+  readonly shards: "shards";
+  readonly shard: "shard";
+  readonly shardHeader: "shardHeader";
+  readonly shardName: "shardName";
+  readonly shardWarn: "shardWarn";
+  readonly shardColor: "shardColor";
+  readonly shardColorInput: "shardColorInput";
 };
 export = classNames;

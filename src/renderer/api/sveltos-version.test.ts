@@ -1,9 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { getSveltosComponents, getSveltosVersion, imageLabel, imageTag } from "./sveltos-version";
+import {
+  baseName,
+  getSveltosComponents,
+  getSveltosVersion,
+  imageLabel,
+  imageTag,
+  versionLabel,
+} from "./sveltos-version";
 
-const deployment = (name: string, image: string) => ({
+const deployment = (name: string, image: string, args?: string[]) => ({
   metadata: { name, namespace: "projectsveltos" },
-  spec: { template: { spec: { containers: [{ image }] } } },
+  spec: { template: { spec: { containers: [{ image, args }] } } },
 });
 
 describe("imageTag", () => {
@@ -34,6 +41,27 @@ describe("imageLabel", () => {
   });
 });
 
+describe("versionLabel", () => {
+  const component = (image: string, version?: string) => ({
+    name: "sveltos-agent-manager",
+    namespace: "",
+    image,
+    version,
+  });
+
+  it("shows the release read from the tag or from --version", () => {
+    expect(versionLabel(component("projectsveltos/addon-controller@sha256:95f3a1b2c3d4", "v1.17.0"))).toBe("v1.17.0");
+  });
+
+  it("shows the short digest when the version is unknown", () => {
+    expect(versionLabel(component("projectsveltos/sveltos-agent@sha256:879d47e1a2b3c4d5"))).toBe("sha256:879d47e");
+  });
+
+  it("shows ? without version or digest", () => {
+    expect(versionLabel(component("registry.local:5000/projectsveltos/addon-controller"))).toBe("?");
+  });
+});
+
 describe("getSveltosComponents", () => {
   it("keeps only the containers published by projectsveltos", () => {
     const components = getSveltosComponents([
@@ -47,8 +75,31 @@ describe("getSveltosComponents", () => {
         namespace: "projectsveltos",
         image: "docker.io/projectsveltos/addon-controller:v0.57.0",
         version: "v0.57.0",
+        shard: undefined,
       },
     ]);
+  });
+
+  it("reads shard key and version from the args of a shard controller pinned by digest", () => {
+    const [component] = getSveltosComponents([
+      deployment("addon-controller-eu-west", "docker.io/projectsveltos/addon-controller@sha256:95f3", [
+        "--report-mode=0",
+        "--shard-key=eu-west",
+        "--version=v1.17.0",
+      ]),
+      deployment("addon-controller", "projectsveltos/addon-controller:v1.17.0", ["--shard-key="]),
+    ]);
+
+    expect(component).toMatchObject({ version: "v1.17.0", shard: "eu-west" });
+    expect(baseName(component)).toBe("addon-controller");
+  });
+
+  it("treats an empty shard key as the default shard", () => {
+    const [component] = getSveltosComponents([
+      deployment("addon-controller", "projectsveltos/addon-controller:v1.17.0", ["--shard-key="]),
+    ]);
+
+    expect(component.shard).toBeUndefined();
   });
 });
 

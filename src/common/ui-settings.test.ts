@@ -8,7 +8,11 @@ describe("normalizeUiSettings", () => {
         hiddenColumns: { addons: ["version", 3, null], broken: "nope" },
         collapsed: { helmRelease: true, other: "yes" },
       }),
-    ).toEqual({ hiddenColumns: { addons: ["version"] }, collapsed: { helmRelease: true } });
+    ).toEqual({ hiddenColumns: { addons: ["version"] }, collapsed: { helmRelease: true }, shardColors: {} });
+    expect(normalizeUiSettings({ shardColors: { a: "#12abEF", b: "red", c: "#fff;}", d: "" } }).shardColors).toEqual({
+      a: "#12abEF",
+      d: "",
+    });
     expect(normalizeUiSettings(null)).toEqual(emptyUiSettings());
     expect(normalizeUiSettings([])).toEqual(emptyUiSettings());
   });
@@ -19,13 +23,20 @@ describe("mergeUiSettings", () => {
     const current = {
       hiddenColumns: { clusters: ["age"], addons: ["version"] },
       collapsed: { helmRelease: true },
+      shardColors: { aws: "#ff0000" },
     };
 
     expect(mergeUiSettings(current, { hiddenColumns: { addons: [] } })).toEqual({
       hiddenColumns: { clusters: ["age"], addons: [] },
       collapsed: { helmRelease: true },
+      shardColors: { aws: "#ff0000" },
     });
     expect(mergeUiSettings(current, { collapsed: { helmRelease: false } }).collapsed).toEqual({ helmRelease: false });
+    expect(mergeUiSettings(current, { shardColors: { azure: "#00ff00" } }).shardColors).toEqual({
+      aws: "#ff0000",
+      azure: "#00ff00",
+    });
+    expect(mergeUiSettings(current, { shardColors: { aws: "" } }).shardColors).toEqual({});
     expect(mergeUiSettings(current, undefined)).toEqual(current);
   });
 });

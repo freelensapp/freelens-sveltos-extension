@@ -79,3 +79,11 @@ export function isSectionCollapsed(sectionId: string, defaultValue = false): boo
 export function setSectionCollapsed(sectionId: string, collapsed: boolean): void {
   update({ collapsed: { [sectionId]: collapsed } });
 }
+
+export function getShardColor(shard: string | undefined): string | undefined {
+  return state.get().shardColors[shard ?? ""] || undefined;
+}
+
+export function setShardColor(shard: string | undefined, color: string | undefined): void {
+  update({ shardColors: { [shard ?? ""]: color ?? "" } });
+}
