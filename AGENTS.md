@@ -197,7 +197,9 @@ of Freelens, and a TLS intercepting proxy needs nothing of the extension. Both
 such requests are read-only `GET`s: the GitHub releases feed of
 projectsveltos/sveltos (`src/main/latest-release.ts`, kept in the preferences
 store for a day) and the chart logos (`src/main/chart-icons.ts`, kept in memory
-per URL). Failures are not cached, so they are retried.
+per URL). Failures are not cached, so they are retried; an HTTP error for a
+chart logo is the exception, kept for 5 minutes so that a missing logo is not
+asked for on every render.
 
 The Helm releases of a managed cluster are the exception. That cluster is not
 in the Freelens catalog, so no proxy of the host reaches it, and
