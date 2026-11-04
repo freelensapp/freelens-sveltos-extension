@@ -33,6 +33,7 @@ describe("filterErrorsByAddon", () => {
       error("other release", "east", "Helm", { resource: "web/redis" }),
       error("other feature", "east", "Resources"),
       error("other profile", "east", "Profile", { profileName: "redis" }),
+      error("other profile feature", "east", "Helm", { profileName: "redis" }),
       error("other cluster release", "west", "Helm", { resource: "web/nginx" }),
       error("other cluster feature", "west", "Helm"),
       error("other cluster profile", "west", "Profile"),

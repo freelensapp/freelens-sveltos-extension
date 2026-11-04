@@ -94,7 +94,8 @@ export function filterErrorsByAddon(errors: DeployError[], addon: Addon): Deploy
     if (error.clusterNamespace !== addon.clusterNamespace || error.clusterName !== addon.clusterName) return false;
     if (error.feature === "Profile") return error.profileName === addon.profile;
     if (error.feature !== addon.type) return false;
-    if (!error.resource) return true;
+    // A feature failure comes from the ClusterSummary of a single profile: only the add-on's own is kept.
+    if (!error.resource) return !error.profileName || error.profileName === addon.profile;
 
     return error.resource === `${addon.namespace ?? ""}/${addon.name}`;
   });
