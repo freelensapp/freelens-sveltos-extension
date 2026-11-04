@@ -88,8 +88,11 @@ export function filterErrorsByCluster(errors: DeployError[], namespace: string, 
   return errors.filter((error) => error.clusterNamespace === namespace && error.clusterName === name);
 }
 
+/** The failures of the add-on on its own cluster, with the profile level error of its ClusterSummary. */
 export function filterErrorsByAddon(errors: DeployError[], addon: Addon): DeployError[] {
   return errors.filter((error) => {
+    if (error.clusterNamespace !== addon.clusterNamespace || error.clusterName !== addon.clusterName) return false;
+    if (error.feature === "Profile") return error.profileName === addon.profile;
     if (error.feature !== addon.type) return false;
     if (!error.resource) return true;
 
