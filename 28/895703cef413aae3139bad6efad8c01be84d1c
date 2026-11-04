@@ -1,0 +1,25 @@
+src/main/chart-icons.ts
+  s_90da8adbc1876d::t_e8b84fedcc2b83 12-15,24,33
+src/renderer/api/chart-icon.ts
+  s_90da8adbc1876d::t_e8b84fedcc2b83 14-15,40
+src/main/chart-icons.test.ts
+  s_90da8adbc1876d::t_e8b84fedcc2b83 2-3,12-15,30-31,41-46
+AGENTS.md
+  s_90da8adbc1876d::t_e8b84fedcc2b83 200-202
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "28895703cef413aae3139bad6efad8c01be84d1c",
+  "prompts": {},
+  "sessions": {
+    "s_90da8adbc1876d": {
+      "agent_id": {
+        "tool": "github-copilot-cli",
+        "id": "74338ac2-3bd3-4551-9acf-c7f81fe20a4d",
+        "model": "auto"
+      },
+      "human_author": "Alberto LL <alberto.lunghi@wolterskluwer.com>"
+    }
+  }
+}
