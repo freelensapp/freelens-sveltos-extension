@@ -11,7 +11,8 @@ export function setChartIconFetcher(value: ChartIconFetcher): void {
   fetcher = value;
 }
 
-const cache = new Map<string, string | undefined>();
+/** Only the logos: a failure is asked for again on the next mount, and main decides how long it keeps it. */
+const cache = new Map<string, string>();
 const inFlight = new Map<string, Promise<string | undefined>>();
 
 function load(iconUrl: string): Promise<string | undefined> {
@@ -36,7 +37,7 @@ function load(iconUrl: string): Promise<string | undefined> {
         );
       }
 
-      cache.set(iconUrl, result.icon);
+      if (result.icon) cache.set(iconUrl, result.icon);
       inFlight.delete(iconUrl);
 
       return result.icon;
