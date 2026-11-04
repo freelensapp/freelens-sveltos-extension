@@ -19,6 +19,13 @@ export function imageTag(image: string): string | undefined {
   return colon > slash ? withoutDigest.slice(colon + 1) : undefined;
 }
 
+/** The tag of an image reference, or its short digest (`sha256:879d47e`) when it is pinned by digest only. */
+export function imageLabel(image: string): string {
+  const digest = image.split("@")[1];
+
+  return imageTag(image) ?? (digest ? digest.slice(0, digest.indexOf(":") + 8) : "?");
+}
+
 export function getSveltosComponents(deployments: DeploymentLike[]): SveltosComponent[] {
   return deployments.flatMap((deployment) => {
     const image = (deployment.spec?.template?.spec?.containers ?? [])
